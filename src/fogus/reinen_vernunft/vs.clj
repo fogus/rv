@@ -104,9 +104,7 @@
                           (reduce (fn [acc new_g]
                                     (if (and
                                          (not (more-general? new_g example))
-                                         (every? (fn [pe]
-                                                   more-general? new_g pe)
-                                                 S)
+                                         (every? (fn [pe] more-general? new_g pe) S)
                                          (not-any? (fn [other_g]
                                                      (and
                                                       (not (= g other_g))
