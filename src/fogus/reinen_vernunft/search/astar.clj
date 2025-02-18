@@ -1,6 +1,8 @@
 (ns fogus.reinen-vernunft.search.astar
   "A* search implementation.")
 
+;; WIP
+
 (def world [[  1   1   1   1   1]
             [999 999 999 999   1]
             [  1   1   1   1   1]
@@ -71,13 +73,12 @@
                               [(total-cost newcost step-est size y x) w]))
                           nbr-yxs)))))))))
 
-(def shrubs [[1 1 1 2   1]
+(comment
+  (def shrubs [[1 1 1 2   1]
              [1 1 1 999 1]
              [1 1 1 999 1]
              [1 1 1 999 1]
              [1 1 1 1   1]])
-
-(comment
 
   (astar [0 0] 900 world)
 

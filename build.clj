@@ -4,12 +4,12 @@
 (def lib 'me.fogus/reinen-vernunft)
 (def description "Code conversations in Clojure regarding the application of pure search, reasoning, and query algorithms.")
 ;;(def version (format "0.0.%s" (b/git-count-revs nil)))
-(def version "0.2.0")
+(def version "0.0.3")
 (def class-dir "target/classes")
 (def jar-file (format "target/%s.jar" (name lib)))
 
 ;; delay to defer side effects (artifact downloads)
-(def basis (delay (b/create-basis {:project "deps.edn"})))
+(def basis (delay (b/create-basis{:project "deps.edn"})))
 
 (defn clean [_]
   (b/delete {:path "target"}))
@@ -18,7 +18,7 @@
   (b/write-pom {:class-dir class-dir
                 :lib lib
                 :version version
-                :basis @basis
+                :basis (update-in @basis [:libs] dissoc 'org.clojure/clojure)
                 :src-dirs ["src"]})
   (b/copy-dir {:src-dirs ["src" "resources"]
                :target-dir class-dir})
