@@ -41,21 +41,37 @@
   (.write writer (str lvar)))
 
 (def ID_KEY :kb/id)
-(def ^:private db-ids (atom 0))
+
+(def ^:private use-or-gen-id
+  (let [next-id (atom 0)]
+    (fn [entity]
+      (if-let [id (get entity ID_KEY)]
+        id
+        (swap! next-id inc)))))
 
 (defn map->relation
   "Converts a map to a set of tuples for that map, applying a unique
-  :kb/id if the map doesn't already have a value mapped for that key."
-  [entity]
-  (let [id (get entity ID_KEY)
-        id  (if id id (swap! db-ids inc))]
-    (for [[k v] entity
-          :when (not= k ID_KEY)]
-      [id k v])))
+  :kb/id if the map doesn't already have a value mapped for that key.
+
+  An idfn is a function of map -> id and if provided is used to
+  override the default entity id generation and any existing :kb/id
+  values."
+  ([entity]
+   (map->relation use-or-gen-id entity))
+  ([idfn entity]
+   (let [id (idfn entity)]
+     (for [[k v] entity
+           :when (not= k ID_KEY)]
+       [id k v]))))
 
 (defn table->kb
   "Converts a Table into a KB, applying unique :kb/id to maps without a
-  mapped identity value."
-  [db]
-  {:facts (set (mapcat map->relation db))})
+  mapped identity value.
+
+  An idfn is a function of map -> id and if provided is used to
+  override the default entity id generation and any existing :kb/id
+  values."
+  ([table] (table->kb use-or-gen-id table))
+  ([idfn table]
+   {:facts (set (mapcat #(map->relation idfn %) table))}))
 

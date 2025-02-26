@@ -1,7 +1,8 @@
 (ns reinen-vernunft.datalog-test
   (:require [clojure.test :refer :all]
             [fogus.reinen-vernunft.core :as core]
-            [fogus.reinen-vernunft.datalog :as d]))
+            [fogus.reinen-vernunft.datalog :as d]
+            [fogus.reinen-vernunft.fuzzy.soundex :as s]))
 
 (deftest test-datalog-q*-no-rules
   (let [fkb #{[-1002 :response/to -51]
@@ -123,3 +124,18 @@
                   (> 50 ?age)
                   [?p :person/name ?name]]
                 (core/table->kb table))))))
+
+(deftest test-datalog-with-fuzzy-ids
+  (let [table #{{:person/name "Fogus"
+                 :favorite/color "Purple"}
+                {:person/name "Phogus"
+                 :spelled/wrong? true}}]
+    (is (= #{["Fogus" "Purple" true] ["Phogus" "Purple" true]}
+           (d/q '[:find ?n ?c ?sw
+                  :where
+                  [?p :person/name ?n]
+                  [?p :favorite/color ?c]
+                  [?p :spelled/wrong? ?sw]]
+                (core/table->kb #(-> % :person/name (s/encode :numeric? true))
+                                table))))))
+
