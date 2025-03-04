@@ -9,9 +9,7 @@
         ?z (core/->LVar 'z [0 1])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [(c/map->cpair {:domain ?x :value 0})
-            (c/map->cpair {:domain ?y :value 0})
-            (c/map->cpair {:domain ?z :value 0})]
+    (is (= [[?x 0] [?y 0] [?z 0]]
            (c/find-sat c1)))))
 
 (deftest solve-tests2
@@ -20,9 +18,7 @@
         ?z (core/->LVar 'z [2 3])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [(c/map->cpair {:domain ?x :value 1})
-            (c/map->cpair {:domain ?y :value 1})
-            (c/map->cpair {:domain ?z :value 2})]
+    (is (= [[?x 1] [?y 1] [?z 2]]
            (c/find-sat c1)))))
 
 (deftest solve-tests3
@@ -31,7 +27,5 @@
         ?z (core/->LVar 'z [3 3])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [(c/map->cpair {:domain ?x :value 1})
-            (c/map->cpair {:domain ?y :value 2})
-            (c/map->cpair {:domain ?z :value 3})]
+    (is (= [[?x 1] [?y 2] [?z 3]]
            (c/find-sat c1)))))

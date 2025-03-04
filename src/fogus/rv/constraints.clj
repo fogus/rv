@@ -21,7 +21,7 @@
   (let [vars     (:variables c)
         ;;varnames (map :domain vars)
         tuples   (util/cart (map :range vars))]
-    (map #(map ->cpair
+    (map #(map vector
                vars ;;varnames
                %) tuples)))
 
@@ -29,9 +29,9 @@
 
 (defn test-pair [f p]
   (cond (= p []) (live/evil {} f)
-        :else (let [current-pair    (first p)
+        :else (let [[domain value] (first p)
                     remaining-pairs (rest p)]
-                (test-pair (subst f {(:domain current-pair) (:value current-pair)})
+                (test-pair (subst f {domain value})
                            remaining-pairs))))
 
 (defn- descend [f ps]
