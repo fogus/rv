@@ -7,7 +7,11 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns fogus.rv.constraints
-  "A simple constraints solver."
+  "Constraints solving functions that operate on a Constraint Description
+  which is a map describing a constraint description containing the mappings:
+  - :variables -> seq of LVars
+  - :formula -> list describing a predicate expression composed of a mix of
+    the LVars in :variables and Clojure functions."
   (:require [fogus.rv.core :as core]
             [fogus.rv.util :as util]
             clojure.core.unify))
