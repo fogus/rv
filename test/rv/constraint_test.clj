@@ -1,5 +1,6 @@
 (ns rv.constraint-test
   (:require [clojure.test :refer :all]
+            [fogus.rv.core :as core]
             [fogus.rv.constraints :as c]))
 
 (deftest solve-tests1
@@ -7,6 +8,15 @@
                             (c/->variable '?y [0 1])
                             (c/->variable '?z [0 1])]
                          '(= (+ ?x ?y) ?z))]
+    (is (= [(c/map->cpair '{:domain ?x :value 0})
+            (c/map->cpair '{:domain ?y :value 0})
+            (c/map->cpair '{:domain ?z :value 0})]
+           (c/find-sat c1))))
+
+  (let [c1 (c/->constraint [(core/->LVar '?x [0 1])
+                            (core/->LVar '?y [0 1])
+                            (core/->LVar '?z [0 1])]
+                           '(= (+ ?x ?y) ?z))]
     (is (= [(c/map->cpair '{:domain ?x :value 0})
             (c/map->cpair '{:domain ?y :value 0})
             (c/map->cpair '{:domain ?z :value 0})]

@@ -50,6 +50,12 @@
                          '(= (+ ?x ?y) ?z))]
     (find-sat c1))
 
+  (let [c1 (->constraint [(core/->LVar '?x [0 1])
+                          (core/->LVar '?y [0 1])
+                          (core/->LVar '?z [0 1])]
+                         '(= (+ ?x ?y) ?z))]
+    (find-sat c1))
+
   (let [c1 (->constraint [(->variable '?x [0 1])
                           (->variable '?y [1 2])
                           (->variable '?z [2 3])]
