@@ -15,7 +15,6 @@
             [clojure.core.unify :as unify]
             [fogus.evalive :as live]))
 
-(defrecord constraint [variables formula])
 (defrecord cpair      [domain value])
 
 (defn get-all-pairs [c]
@@ -47,29 +46,11 @@
 
 (comment
 
-  (let [c1 (->constraint [(core/->LVar '?x [0 1])
-                          (core/->LVar '?y [0 1])
-                          (core/->LVar '?z [0 1])]
-                         '(= (+ ?x ?y) ?z))]
-    (find-sat c1))
-
   (let [?x (core/->LVar 'x [0 1])
         ?y (core/->LVar 'y [0 1])
         ?z (core/->LVar 'z [0 1])
-        c1 (->constraint [?x ?y ?z]
-                         `(= (+ ~?x ~?y) ~?z))]
-    (find-sat c1))
-
-  (let [c1 (->constraint [(core/->LVar '?x [0 1])
-                          (core/->LVar '?y [1 2])
-                          (core/->LVar '?z [2 3])]
-                         '(= (+ ?x ?y) ?z))]
-    (find-sat c1))
-
-  (let [c1 (->constraint [(core/->LVar '?x [1 1])
-                          (core/->LVar '?y [2 2])
-                          (core/->LVar '?z [3 3])]
-                         '(= (+ ?x ?y) ?z))]
+        c1 {:variables [?x ?y ?z]
+            :formula `(= (+ ~?x ~?y) ~?z)}]
     (find-sat c1))
 
 )
