@@ -3,6 +3,15 @@
             [fogus.rv.core :as core]
             [fogus.rv.constraints :as c]))
 
+(deftest test-satisfy1-no-answer
+  (let [?x (core/->LVar 'x [0 1])
+        ?y (core/->LVar 'y [0 1])
+        ?z (core/->LVar 'z [0 1])
+        c1 {:variables [?x ?y ?z]
+            :formula   `(= (+ ~?x ~?y 10000) ~?z)}]
+    (is (= {}
+           (c/satisfy1 c1)))))
+
 (deftest test-satisfy1-single-answer
   (let [?x (core/->LVar 'x [0 1])
         ?y (core/->LVar 'y [0 1])
@@ -37,3 +46,18 @@
             :formula   `(= (+ ~?x ~?y) 10)}]
     (is (= {?x 6 ?y 4}
            (c/satisfy1 c1)))))
+
+(deftest test-satisfy*-range
+  (let [?x (core/->LVar 'x (range 1 7))
+        ?y (core/->LVar 'y (range 3 8))
+        c1 {:variables [?x ?y]
+            :formula   `(= (+ ~?x ~?y) 10)}]
+    (is (= #{{?x 5, ?y 5} {?x 3, ?y 7} {?x 6, ?y 4} {?x 4, ?y 6}}
+           (set (c/satisfy* c1))))))
+
+(deftest test-satisfy*-range-no-answer
+  (let [?x (core/->LVar 'x (range 1 7))
+        ?y (core/->LVar 'y (range 3 8))
+        c1 {:variables [?x ?y]
+            :formula   `(= (+ ~?x ~?y) 1000000)}]
+    (is (empty? (c/satisfy* c1)))))
