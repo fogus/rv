@@ -12,23 +12,27 @@
   "A simple constraints solver."
   (:require [fogus.rv.core :as core]
             [fogus.rv.util :as util]
-            [clojure.core.unify         :as unify]
-            [fogus.evalive              :as live]))
+            [clojure.core.unify :as unify]
+            [fogus.evalive :as live]))
 
 (defrecord constraint [variables formula])
 (defrecord cpair      [domain value])
 
 (defn get-all-pairs [c]
   (let [vars     (:variables c)
-        varnames (map :domain vars)
+        ;;varnames (map :domain vars)
         tuples   (util/cart (map :range vars))]
-    (map #(map ->cpair varnames %) tuples)))
+    (map #(map ->cpair
+               vars ;;varnames
+               %) tuples)))
+
+(def ^:private subst (clojure.core.unify/make-occurs-subst-fn core/lv?))
 
 (defn test-pair [f p]
   (cond (= p []) (live/evil {} f)
         :else (let [current-pair    (first p)
                     remaining-pairs (rest p)]
-                (test-pair (unify/subst f {(:domain current-pair) (:value current-pair)})
+                (test-pair (subst f {(:domain current-pair) (:value current-pair)})
                            remaining-pairs))))
 
 (defn- descend [f ps]
@@ -47,6 +51,13 @@
                           (core/->LVar '?y [0 1])
                           (core/->LVar '?z [0 1])]
                          '(= (+ ?x ?y) ?z))]
+    (find-sat c1))
+
+  (let [?x (core/->LVar 'x [0 1])
+        ?y (core/->LVar 'y [0 1])
+        ?z (core/->LVar 'z [0 1])
+        c1 (->constraint [?x ?y ?z]
+                         `(= (+ ~?x ~?y) ~?z))]
     (find-sat c1))
 
   (let [c1 (->constraint [(core/->LVar '?x [0 1])
