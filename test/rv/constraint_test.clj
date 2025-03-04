@@ -3,29 +3,37 @@
             [fogus.rv.core :as core]
             [fogus.rv.constraints :as c]))
 
-(deftest solve-tests1
+(deftest test-satisfy1-single-answer
   (let [?x (core/->LVar 'x [0 1])
         ?y (core/->LVar 'y [0 1])
         ?z (core/->LVar 'z [0 1])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [[?x 0] [?y 0] [?z 0]]
-           (c/find-sat c1)))))
+    (is (= {?x 0 ?y 0 ?z 0}
+           (c/satisfy1 c1)))))
 
-(deftest solve-tests2
+(deftest test-satisfy1-2
   (let [?x (core/->LVar 'x [0 1])
         ?y (core/->LVar 'y [1 2])
         ?z (core/->LVar 'z [2 3])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [[?x 1] [?y 1] [?z 2]]
-           (c/find-sat c1)))))
+    (is (= {?x 1 ?y 1 ?z 2}
+           (c/satisfy1 c1)))))
 
-(deftest solve-tests3
+(deftest test-satisfy1-3
   (let [?x (core/->LVar 'x [1 1])
         ?y (core/->LVar 'y [2 2])
         ?z (core/->LVar 'z [3 3])
         c1 {:variables [?x ?y ?z]
             :formula   `(= (+ ~?x ~?y) ~?z)}]
-    (is (= [[?x 1] [?y 2] [?z 3]]
-           (c/find-sat c1)))))
+    (is (= {?x 1 ?y 2 ?z 3}
+           (c/satisfy1 c1)))))
+
+(deftest test-satisfy1-range
+  (let [?x (core/->LVar 'x (range 1 7))
+        ?y (core/->LVar 'y (range 3 8))
+        c1 {:variables [?x ?y]
+            :formula   `(= (+ ~?x ~?y) 10)}]
+    (is (= {?x 6 ?y 4}
+           (c/satisfy1 c1)))))

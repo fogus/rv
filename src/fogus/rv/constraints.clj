@@ -6,8 +6,6 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 
-;; WIP
-
 (ns fogus.rv.constraints
   "A simple constraints solver."
   (:require [fogus.rv.core :as core]
@@ -15,42 +13,27 @@
             [clojure.core.unify :as unify]
             [fogus.evalive :as live]))
 
-(defrecord cpair      [domain value])
-
-(defn get-all-pairs [c]
-  (let [vars     (:variables c)
-        ;;varnames (map :domain vars)
-        tuples   (util/cart (map :range vars))]
-    (map #(map vector
-               vars ;;varnames
-               %) tuples)))
+(defn- pairwise [c]
+  (let [vars (:variables c)
+        tuples (util/cart (map :range vars))]
+    (map #(map vector vars %) tuples)))
 
 (def ^:private subst (clojure.core.unify/make-occurs-subst-fn core/lv?))
 
-(defn test-pair [f p]
+(defn- test-pair [f p]
   (cond (= p []) (live/evil {} f)
         :else (let [[domain value] (first p)
                     remaining-pairs (rest p)]
                 (test-pair (subst f {domain value})
                            remaining-pairs))))
 
-(defn- descend [f ps]
-  (cond (nil? ps) []
-        (test-pair f (first ps)) (first ps)
-        :else (recur f (rest ps))))
+(defn- descend [f pairs]
+  (cond (nil? pairs) []
+        (test-pair f (first pairs)) (first pairs)
+        :else (recur f (rest pairs))))
 
-(defn find-sat [c]
+(defn satisfy1 [c]
   (let [formula (:formula c)
-        pairs   (get-all-pairs c)]
-    (descend formula pairs)))
+        pairs   (pairwise c)]
+    (into {} (descend formula pairs))))
 
-(comment
-
-  (let [?x (core/->LVar 'x [0 1])
-        ?y (core/->LVar 'y [0 1])
-        ?z (core/->LVar 'z [0 1])
-        c1 {:variables [?x ?y ?z]
-            :formula `(= (+ ~?x ~?y) ~?z)}]
-    (find-sat c1))
-
-)
