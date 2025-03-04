@@ -25,15 +25,20 @@
 
 ;; Logic variables
 
-(deftype LVar [id]
+(defrecord LVar [domain range]
   Object
-  (equals [this other]
+  #_(equals [this other]
     (if (instance? LVar other) 
-      (= (.-id this)
-         (.-id other))
+      (and
+       (= (.-domain this) (.-domain other)))
       false))
   (toString [this]
-    (str "_." id)))
+    (if domain
+      (str "?" domain "/" range)
+      (str "?" domain))))
+
+(LVar. "a" "b")
+(LVar. nil "b")
 
 (def lv? #(instance? LVar %))
 
