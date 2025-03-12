@@ -1,3 +1,9 @@
+# v0.0.6
+- Add fogus.rv.constraints ns exposing two functions: satisfy1 and satisfy* that take 
+  a constraint description containing :variables and :formula mappings and return
+  context(s) defining bindings for the variables constrained by formula.
+- Added a bibtex file with the references for rv
+
 # v0.0.5
 - Added the ability to define entity enumerations by mapping a key to a set. These are
   expanded into [id k v] for each element in the set.

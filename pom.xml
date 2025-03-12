@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>me.fogus</groupId>
   <artifactId>rv</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <name>rv</name>
   <dependencies>
     <dependency>
