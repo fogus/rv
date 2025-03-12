@@ -6,15 +6,11 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 
-(ns fogus.reinen-vernunft.util)
+(ns fogus.rv.impl.unification
+  "Provides internal unification functions.
+  DO NOT USE THIS NS.
+  There is no guarantee that it will remain stable or at all."
+  (:require [fogus.rv.core :as core]
+            clojure.core.unify))
 
-(defn process-bindings [bindings]
-  {:names  (take-nth 2 bindings)
-   :values (vec (take-nth 2 (rest bindings)))})
-
-(defn cart [colls]
-  (if (empty? colls)
-    '(())
-    (for [more (cart (rest colls))
-          x (first colls)]
-      (cons x more))))
+(def subst (clojure.core.unify/make-occurs-subst-fn core/lv?))
