@@ -1,89 +1,62 @@
 (ns fogus.rv.search.astar
-  "A* search implementation.")
+  "A* search implementation."
+  (:require [fogus.rv.util :as util]))
 
-;; WIP
+(defprotocol GraphSearch
+  (start-node [_])
+  (neighbors-of [_ node])
+  (step-estimate [_])
+  (cost [_ node]))
 
-(def world [[  1   1   1   1   1]
-            [999 999 999 999   1]
-            [  1   1   1   1   1]
-            [  1 999 999 999 999]
-            [  1   1   1   1   1]])
+(defrecord Graph [nodes])
 
+;; (get-in yx-costs yx)
+;; (count yx-costs)
 
-(defn neighbors
-  ([size yx]
-   (neighbors [[-1 0] [1 0] [0 -1] [0 1]] size yx))
-  ([deltas size yx]
-   (filter (fn [new-yx] (every? #(< -1 % size)
-                                new-yx))
-           (map #(vec (map + yx %)) deltas))))
-
-(defn estimate-cost [step-cost-est sz y x]
+(defn- estimate-cost [step-cost-est sz y x]
   (* step-cost-est 
      (- (+ sz sz) y x 2)))
 
-(defn path-cost [node-cost cheapest-nbr]
+(defn- path-cost [node-cost cheapest-nbr]
   (+ node-cost
      (or (:cost cheapest-nbr) 0)))
 
-(comment
-
-  (path-cost 900 {:cost 1})
-  ;;=> 901
-  
-  )
-
-(defn total-cost [newcost step-cost-est size y x]
+(defn- total-cost [newcost step-cost-est size y x]
   (+ newcost 
      (estimate-cost step-cost-est size y x)))
 
-(defn min-by [f coll]
-  (when (seq coll)
-    (reduce (fn [min this]
-              (if (> (f min) (f this)) this min))
-            coll)))
-
-(defn astar [start-yx step-est cell-costs]
-  (let [size (count cell-costs)]
+(defn astar
+  "Implements a lazy A* graph traversal algorithm."
+  [graph]
+  (let [size (count graph)
+        start (start-node graph)
+        step-est (step-estimate graph)]
     (loop [steps 0
-           routes (vec (replicate size (vec (replicate size nil))))
-           work-todo (sorted-set [0 start-yx])]
-      (if (empty? work-todo)                    ;; #: Check done
-        [(peek (peek routes)) :steps steps] ;; #: Grab the first route
-        (let [[_ yx :as work-item] (first work-todo) ;; #: Get next work item
-              rest-work-todo (disj work-todo work-item) ;; #: Clear from todo
-              nbr-yxs (neighbors size yx)    ;; #: Get neighbors
-              cheapest-nbr (min-by :cost     ;; #: Calc least-cost
-                                   (keep #(get-in routes %) 
-                                         nbr-yxs))
-              newcost (path-cost (get-in cell-costs yx) ;; #: Calc path so-far
+           routes (vec (repeat size (vec (repeat size nil))))
+           work-todo (sorted-set [0 start])]
+      (if (empty? work-todo)                             ;; Check done
+        (assoc (peek (peek routes)) :steps steps)        ;; Grab the first route
+        (let [[_ node :as work-item] (first work-todo)     ;; Get next work item
+              rest-work-todo (disj work-todo work-item)  ;; Clear from todo
+              nbr-yxs (neighbors-of graph node)            ;; Get neighbors
+              cheapest-nbr (util/min-by :cost            ;; Calc least-cost
+                                        (keep #(get-in routes %) 
+                                              nbr-yxs))
+              newcost (path-cost (cost graph node) ;; Calc path so-far
                                  cheapest-nbr)
-              oldcost (:cost (get-in routes yx))]
-          (if (and oldcost (>= newcost oldcost)) ;; #: Check if new is worse
+              oldcost (:cost (get-in routes node))]
+          (if (and oldcost (>= newcost oldcost))         ;; Check if new is worse
             (recur (inc steps) routes rest-work-todo)
-            (recur (inc steps) ;; #: Place new path in the routes
-                   (assoc-in routes yx
+            (recur (inc steps)                           ;; Place new path in the routes
+                   (assoc-in routes node
                              {:cost newcost 
-                              :yxs (conj (:yxs cheapest-nbr []) 
-                                         yx)})
-                   (into rest-work-todo ;; #: Add the estimated path to the todo and recur
+                              :path (conj (:path cheapest-nbr []) node)})
+                   (into rest-work-todo                  ;; Add the estimated path to the todo and recur
                          (map 
                           (fn [w] 
                             (let [[y x] w]
                               [(total-cost newcost step-est size y x) w]))
                           nbr-yxs)))))))))
 
-(comment
-  (def shrubs [[1 1 1 2   1]
-             [1 1 1 999 1]
-             [1 1 1 999 1]
-             [1 1 1 999 1]
-             [1 1 1 1   1]])
-
-  (astar [0 0] 900 world)
-
-  (astar [0 0] 900 shrubs)
-
-)
 
 

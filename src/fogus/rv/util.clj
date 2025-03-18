@@ -18,3 +18,9 @@
     (for [more (cart (rest colls))
           x (first colls)]
       (cons x more))))
+
+(defn min-by [f coll]
+  (when (seq coll)
+    (reduce (fn [min this]
+              (if (> (f min) (f this)) this min))
+            coll)))
