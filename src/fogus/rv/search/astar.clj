@@ -4,14 +4,10 @@
 
 (defprotocol GraphSearch
   (start-node [_])
+  (goal-node [_])
   (neighbors-of [_ node])
   (step-estimate [_])
   (cost [_ node]))
-
-(defrecord Graph [nodes])
-
-;; (get-in yx-costs yx)
-;; (count yx-costs)
 
 (defn- estimate-cost [step-cost-est sz y x]
   (* step-cost-est 
@@ -38,10 +34,10 @@
         (assoc (peek (peek routes)) :steps steps)        ;; Grab the first route
         (let [[_ node :as work-item] (first work-todo)     ;; Get next work item
               rest-work-todo (disj work-todo work-item)  ;; Clear from todo
-              nbr-yxs (neighbors-of graph node)            ;; Get neighbors
+              neighbors (neighbors-of graph node)            ;; Get neighbors
               cheapest-nbr (util/min-by :cost            ;; Calc least-cost
                                         (keep #(get-in routes %) 
-                                              nbr-yxs))
+                                              neighbors))
               newcost (path-cost (cost graph node) ;; Calc path so-far
                                  cheapest-nbr)
               oldcost (:cost (get-in routes node))]
@@ -56,7 +52,7 @@
                           (fn [w] 
                             (let [[y x] w]
                               [(total-cost newcost step-est size y x) w]))
-                          nbr-yxs)))))))))
+                          neighbors)))))))))
 
 
 

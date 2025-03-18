@@ -10,10 +10,12 @@
                                 new-yx))
            (map #(vec (map + yx %)) deltas))))
 
-(deftype SimpleAsciiGraph [start step-est yxcosts]
+(deftype SimpleAsciiGraph [start end step-est yxcosts]
   search/GraphSearch
   (start-node [_]
     start)
+  (goal-node [_]
+    end)
   (neighbors-of [_ yx]
     (neighbors (count yxcosts) yx))
   (step-estimate [_]
@@ -26,7 +28,7 @@
     (count yxcosts)))
 
 (deftest test-astar
-  (let [res (search/astar (SimpleAsciiGraph. [0 0]
+  (let [res (search/astar (SimpleAsciiGraph. [0 0] [4 4]
                                              900
                                              [[  1   1   1   1   1]
                                               [999 999 999 999   1]
@@ -35,7 +37,7 @@
                                               [  1   1   1   1   1]]))]
     (is (= 17 (:cost res))))
 
-  (let [res (search/astar (SimpleAsciiGraph. [0 0]
+  (let [res (search/astar (SimpleAsciiGraph. [0 0] [4 4]
                                              900
                                              [[1 1 1 2   1]
                                               [1 1 1 999 1]
