@@ -19,8 +19,7 @@
           x (first colls)]
       (cons x more))))
 
-(defn min-by [f coll]
+(defn f-by [f key coll]
   (when (seq coll)
-    (reduce (fn [min this]
-              (if (> (f min) (f this)) this min))
+    (reduce #(f key %1 %2)
             coll)))

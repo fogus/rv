@@ -35,9 +35,9 @@
         (let [[_ node :as work-item] (first work-todo)     ;; Get next work item
               rest-work-todo (disj work-todo work-item)  ;; Clear from todo
               neighbors (neighbors-of graph node)            ;; Get neighbors
-              cheapest-nbr (util/min-by :cost            ;; Calc least-cost
-                                        (keep #(get-in routes %) 
-                                              neighbors))
+              cheapest-nbr (util/f-by min-key :cost            ;; Calc least-cost
+                                      (keep #(get-in routes %) 
+                                            neighbors))
               newcost (path-cost (cost graph node) ;; Calc path so-far
                                  cheapest-nbr)
               oldcost (:cost (get-in routes node))]
