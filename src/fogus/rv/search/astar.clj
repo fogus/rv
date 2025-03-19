@@ -17,7 +17,7 @@
   (+ node-cost
      (or (:cost cheapest-nbr) 0)))
 
-(defn- total-cost [newcost step-cost-est size y x]
+(defn- total-cost [newcost step-cost-est size [y x]]
   (+ newcost 
      (estimate-cost step-cost-est size y x)))
 
@@ -28,7 +28,7 @@
         start (start-node graph)
         step-est (step-estimate graph)]
     (loop [steps 0
-           routes (vec (repeat size (vec (repeat size nil))))
+           routes (vec (repeat size (vec (repeat size nil)))) ;; FIX
            work-todo (sorted-set [0 start])]
       (if (empty? work-todo)                             ;; Check done
         (assoc (peek (peek routes)) :steps steps)        ;; Grab the first route
@@ -49,9 +49,8 @@
                               :path (conj (:path cheapest-nbr []) node)})
                    (into rest-work-todo                  ;; Add the estimated path to the todo and recur
                          (map 
-                          (fn [w] 
-                            (let [[y x] w]
-                              [(total-cost newcost step-est size y x) w]))
+                          (fn [node]                        ;; FIX
+                            [(total-cost newcost step-est size node) node])
                           neighbors)))))))))
 
 
