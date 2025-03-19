@@ -77,12 +77,25 @@
                 [1 2 1 999 1]
                 [1 2 1 999 1]
                 [1 2 2 999 1]
-                [1 1 1 3   1]]
+                [1 1 1 2   1]]
         res (search/astar (SimpleAsciiGraph. 900
                                              l-path
                                              (init-routes l-path))
                           [0 0] [4 4])]
-    (is (= 11 (:cost res)))
+    (is (= 10 (:cost res)))
     (is (= [[0 0] [1 0] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
+           (:path res))))
+
+  (let [short-path [[1 2 1 2   1]
+                    [1 1 1 999 1]
+                    [1 1 1 999 1]
+                    [1 1 1 999 1]
+                    [1 1 1 1   1]]
+        res (search/astar (SimpleAsciiGraph. 900
+                                             short-path
+                                             (init-routes short-path))
+                          [0 0] [1 1])]
+    (is (= 0 (:cost res)))
+    (is (= []
            (:path res)))))
 

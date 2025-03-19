@@ -40,20 +40,14 @@
               newcost (path-cost (cost graph node) ;; Calc path so-far
                                  (:cost cheapest-nbr))
               oldcost (:cost (route-of graph node))]
-          (if (= node goal-node)
+          (if (and oldcost (>= newcost oldcost))         ;; Check if new is worse
+            (recur (inc steps) graph rest-work-todo)
             (recur (inc steps)
-                   (report-route graph node              ;; report new path to the goal
+                   (report-route graph node              ;; report new path to the cheaper node
                                  {:cost newcost 
                                   :path (conj (:path cheapest-nbr []) node)})
-                   rest-work-todo)
-            (if (and oldcost (>= newcost oldcost))         ;; Check if new is worse
-              (recur (inc steps) graph rest-work-todo)
-              (recur (inc steps)
-                     (report-route graph node              ;; report new path to the cheaper node
-                                   {:cost newcost 
-                                    :path (conj (:path cheapest-nbr []) node)})
-                     (into rest-work-todo                  ;; Add the estimated path to the todo and recur
-                           (map #(vector (total-cost newcost step-est size %) %) neighbors))))))))))
+                   (into rest-work-todo ;; Add the estimated path to the todo and recur
+                         (map #(vector (total-cost newcost step-est size %) %) neighbors)))))))))
 
 
 
