@@ -43,27 +43,46 @@
                                              z-world
                                              (init-routes z-world))
                           [0 0] [4 4])]
-    (is (= 17 (:cost res))))
+    (is (= 17 (:cost res)))
+    (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [2 3] [2 2] [2 1] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
+           (:path res))))
 
-  (let [shrub-world [[1 1 1 2   1]
-                     [1 1 1 999 1]
-                     [1 1 1 999 1]
-                     [1 1 1 999 1]
-                     [1 1 1 1   1]]
+  (let [down-path [[1 1 1 2   1]
+                   [1 1 1 999 1]
+                   [1 1 1 999 1]
+                   [1 1 1 999 1]
+                   [1 1 1 1   1]]
         res (search/astar (SimpleAsciiGraph. 900
-                                             shrub-world
-                                             (init-routes shrub-world))
+                                             down-path
+                                             (init-routes down-path))
                           [0 0] [4 4])]
-    (is (= 9 (:cost res))))
+    (is (= 9 (:cost res)))
+    (is (= [[0 0] [0 1] [0 2] [1 2] [2 2] [3 2] [4 2] [4 3] [4 4]]
+           (:path res))))
 
-  (let [shrub-world [[1 1 1 1   1]
-                     [1 1 1 999 1]
-                     [1 1 1 999 1]
-                     [1 1 1 999 1]
-                     [1 1 1 1   1]]
+  (let [up-path [[1 1 1 2   1]
+                 [1 1 1 999 1]
+                 [1 1 1 999 1]
+                 [1 1 1 999 1]
+                 [1 1 1 3   1]]
         res (search/astar (SimpleAsciiGraph. 900
-                                             shrub-world
-                                             (init-routes shrub-world))
+                                             up-path
+                                             (init-routes up-path))
                           [0 0] [4 4])]
-    (is (= 9 (:cost res)))))
+    (is (= 10 (:cost res)))
+    (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [3 4] [4 4]]
+           (:path res))))
+
+  (let [l-path [[1 2 1 2   1]
+                [1 2 1 999 1]
+                [1 2 1 999 1]
+                [1 2 2 999 1]
+                [1 1 1 3   1]]
+        res (search/astar (SimpleAsciiGraph. 900
+                                             l-path
+                                             (init-routes l-path))
+                          [0 0] [4 4])]
+    (is (= 11 (:cost res)))
+    (is (= [[0 0] [1 0] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
+           (:path res)))))
 
