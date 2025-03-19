@@ -54,5 +54,16 @@
                                              shrub-world
                                              (init-routes shrub-world))
                           [0 0] [4 4])]
+    (is (= 9 (:cost res))))
+
+  (let [shrub-world [[1 1 1 1   1]
+                     [1 1 1 999 1]
+                     [1 1 1 999 1]
+                     [1 1 1 999 1]
+                     [1 1 1 1   1]]
+        res (search/astar (SimpleAsciiGraph. 900
+                                             shrub-world
+                                             (init-routes shrub-world))
+                          [0 0] [4 4])]
     (is (= 9 (:cost res)))))
 
