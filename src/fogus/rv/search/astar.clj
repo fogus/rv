@@ -5,6 +5,9 @@
 (defprotocol GraphSearch
   (start-node [_])
   (goal-node [_])
+  (route-of [_ node])
+  (report-route [_ node new-route])
+  (best-route [_])
   (neighbors-of [_ node])
   (step-estimate [_])
   (cost [_ node]))
@@ -28,30 +31,26 @@
         start (start-node graph)
         step-est (step-estimate graph)]
     (loop [steps 0
-           routes (vec (repeat size (vec (repeat size nil)))) ;; FIX
+           graph graph
            work-todo (sorted-set [0 start])]
       (if (empty? work-todo)                             ;; Check done
-        (assoc (peek (peek routes)) :steps steps)        ;; Grab the first route
+        (assoc (best-route graph) :steps steps)        ;; Grab the first route
         (let [[_ node :as work-item] (first work-todo)     ;; Get next work item
               rest-work-todo (disj work-todo work-item)  ;; Clear from todo
               neighbors (neighbors-of graph node)            ;; Get neighbors
               cheapest-nbr (util/f-by min-key :cost            ;; Calc least-cost
-                                      (keep #(get-in routes %) 
-                                            neighbors))
+                                      (keep #(route-of graph %) neighbors))
               newcost (path-cost (cost graph node) ;; Calc path so-far
                                  cheapest-nbr)
-              oldcost (:cost (get-in routes node))]
+              oldcost (:cost (route-of graph node))]
           (if (and oldcost (>= newcost oldcost))         ;; Check if new is worse
-            (recur (inc steps) routes rest-work-todo)
-            (recur (inc steps)                           ;; Place new path in the routes
-                   (assoc-in routes node
+            (recur (inc steps) graph rest-work-todo)
+            (recur (inc steps)
+                   (report-route graph node              ;; report new path to the graph
                              {:cost newcost 
                               :path (conj (:path cheapest-nbr []) node)})
                    (into rest-work-todo                  ;; Add the estimated path to the todo and recur
-                         (map 
-                          (fn [node]                        ;; FIX
-                            [(total-cost newcost step-est size node) node])
-                          neighbors)))))))))
+                         (map #(vector (total-cost newcost step-est size %) %) neighbors)))))))))
 
 
 
