@@ -1,6 +1,7 @@
 (ns rv.search.astar-test
   (:require [clojure.test :refer :all]
-            [fogus.rv.search.astar :as search]))
+            [fogus.rv.search :as search]
+            [fogus.rv.search.astar :as a*]))
 
 (defn- neighbors
   ([size yx]
@@ -24,6 +25,7 @@
     (get-in routes node))
   (cost-of [_ yx]
     (get-in yxcosts yx))
+  search/HeuristicSearch
   (estimate-cost [_ yx _]
     (let [[y x] yx
           sz (count yxcosts)]
@@ -35,7 +37,7 @@
                  [  1   1   1   1   1]
                  [  1 999 999 999 999]
                  [  1   1   1   1   1]]
-        res (search/astar (SimpleAsciiGraph. 900
+        res (a*/astar (SimpleAsciiGraph. 900
                                              z-world
                                              (init-routes z-world))
                           [0 0] [4 4])]
@@ -48,7 +50,7 @@
                    [1 1 1 999 1]
                    [1 1 1 999 1]
                    [1 1 1 1   1]]
-        res (search/astar (SimpleAsciiGraph. 900
+        res (a*/astar (SimpleAsciiGraph. 900
                                              down-path
                                              (init-routes down-path))
                           [0 0] [4 4])]
@@ -61,7 +63,7 @@
                  [1 1 1 999 1]
                  [1 1 1 999 1]
                  [1 1 1 3   1]]
-        res (search/astar (SimpleAsciiGraph. 900
+        res (a*/astar (SimpleAsciiGraph. 900
                                              up-path
                                              (init-routes up-path))
                           [0 0] [4 4])]
@@ -74,7 +76,7 @@
                 [1 2 1 999 1]
                 [1 2 2 999 1]
                 [1 1 1 2   1]]
-        res (search/astar (SimpleAsciiGraph. 900
+        res (a*/astar (SimpleAsciiGraph. 900
                                              l-path
                                              (init-routes l-path))
                           [0 0] [4 4])]
@@ -87,7 +89,7 @@
                     [1 1 1 999 1]
                     [1 1 1 999 1]
                     [1 1 1 1   1]]
-        res (search/astar (SimpleAsciiGraph. 900
+        res (a*/astar (SimpleAsciiGraph. 900
                                              short-path
                                              (init-routes short-path))
                           [0 0] [1 1])]
