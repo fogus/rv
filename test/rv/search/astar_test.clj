@@ -22,16 +22,12 @@
     (SimpleAsciiGraph. step-est yxcosts (assoc-in routes node new-path)))
   (route-of [_ node]
     (get-in routes node))
-  (best-route [_]
-    (peek (peek routes)))
-  (step-estimate [_]
-    step-est)
-  (cost [_ yx]
+  (cost-of [_ yx]
     (get-in yxcosts yx))
-
-  clojure.lang.Counted
-  (count [_]
-    (count yxcosts)))
+  (estimate-cost [_ yx _]
+    (let [[y x] yx
+          sz (count yxcosts)]
+      (* step-est (- (+ sz sz) y x 2)))))
 
 (deftest test-astar
   (let [z-world [[  1   1   1   1   1]
@@ -87,7 +83,7 @@
            (:path res))))
 
   (let [short-path [[1 2 1 2   1]
-                    [1 1 1 999 1]
+                    [1 0 1 999 1]
                     [1 1 1 999 1]
                     [1 1 1 999 1]
                     [1 1 1 1   1]]
@@ -95,7 +91,7 @@
                                              short-path
                                              (init-routes short-path))
                           [0 0] [1 1])]
-    (is (= 0 (:cost res)))
-    (is (= []
+    (is (= 2 (:cost res)))
+    (is (= [[0 0] [1 0] [1 1]]
            (:path res)))))
 
