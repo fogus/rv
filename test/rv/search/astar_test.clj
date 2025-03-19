@@ -3,24 +3,23 @@
             [fogus.rv.search :as search]
             [fogus.rv.search.astar :as a*]))
 
+(def ^:private ^:const ORTHO-DIRS [[-1 0] [1 0] [0 -1] [0 1]])
+
 (defn- neighbors
-  ([size yx]
-   (neighbors [[-1 0] [1 0] [0 -1] [0 1]] size yx))
-  ([deltas size yx]
-   (filter (fn [new-yx] (every? #(< -1 % size)
-                                new-yx))
-           (map #(vec (map + yx %)) deltas))))
+  [deltas size yx]
+  (filter (fn [new-yx] (every? #(< -1 % size) new-yx))
+          (map #(vec (map + yx %)) deltas)))
 
 (defn- init-routes [yxcosts]
   (let [size (count yxcosts)]
     (vec (repeat size (vec (repeat size nil))))))
 
-(deftype SimpleAsciiGraph [step-est yxcosts routes]
+(deftype SimpleAsciiGraph [dirs step-est yxcosts routes]
   search/GraphSearch
   (neighbors-of [_ yx]
-    (neighbors (count yxcosts) yx))
+    (neighbors dirs (count yxcosts) yx))
   (report-route [_ node new-path]
-    (SimpleAsciiGraph. step-est yxcosts (assoc-in routes node new-path)))
+    (SimpleAsciiGraph. dirs step-est yxcosts (assoc-in routes node new-path)))
   (route-of [_ node]
     (get-in routes node))
   (cost-of [_ yx]
@@ -37,10 +36,8 @@
                  [  1   1   1   1   1]
                  [  1 999 999 999 999]
                  [  1   1   1   1   1]]
-        res (a*/astar (SimpleAsciiGraph. 900
-                                             z-world
-                                             (init-routes z-world))
-                          [0 0] [4 4])]
+        z-graph (SimpleAsciiGraph. ORTHO-DIRS 900 z-world (init-routes z-world))
+        res (a*/astar z-graph [0 0] [4 4])]
     (is (= 17 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [2 3] [2 2] [2 1] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -50,10 +47,8 @@
                    [1 1 1 999 1]
                    [1 1 1 999 1]
                    [1 1 1 1   1]]
-        res (a*/astar (SimpleAsciiGraph. 900
-                                             down-path
-                                             (init-routes down-path))
-                          [0 0] [4 4])]
+        down-graph (SimpleAsciiGraph. ORTHO-DIRS 900 down-path (init-routes down-path))
+        res (a*/astar down-graph [0 0] [4 4])]
     (is (= 9 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [1 2] [2 2] [3 2] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -63,10 +58,8 @@
                  [1 1 1 999 1]
                  [1 1 1 999 1]
                  [1 1 1 3   1]]
-        res (a*/astar (SimpleAsciiGraph. 900
-                                             up-path
-                                             (init-routes up-path))
-                          [0 0] [4 4])]
+        up-graph (SimpleAsciiGraph. ORTHO-DIRS 900 up-path (init-routes up-path))
+        res (a*/astar up-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [3 4] [4 4]]
            (:path res))))
@@ -76,10 +69,8 @@
                 [1 2 1 999 1]
                 [1 2 2 999 1]
                 [1 1 1 2   1]]
-        res (a*/astar (SimpleAsciiGraph. 900
-                                             l-path
-                                             (init-routes l-path))
-                          [0 0] [4 4])]
+        l-graph (SimpleAsciiGraph. ORTHO-DIRS 900 l-path (init-routes l-path))
+        res (a*/astar l-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [1 0] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -89,10 +80,8 @@
                     [1 1 1 999 1]
                     [1 1 1 999 1]
                     [1 1 1 1   1]]
-        res (a*/astar (SimpleAsciiGraph. 900
-                                             short-path
-                                             (init-routes short-path))
-                          [0 0] [1 1])]
+        short-graph (SimpleAsciiGraph. ORTHO-DIRS 900 short-path (init-routes short-path))
+        res (a*/astar short-graph [0 0] [1 1])]
     (is (= 2 (:cost res)))
     (is (= [[0 0] [1 0] [1 1]]
            (:path res)))))
