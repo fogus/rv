@@ -16,7 +16,15 @@
   (+ newcost (search/estimate-cost graph node goal)))
 
 (defn astar
-  "Implements a lazy A* best-first graph traversal algorithm."
+  "Implements a lazy A* best-first graph traversal algorithm. Takes a
+  `graph` object implementing both of the `fogus.rv.search.GraphSearch`
+  and `fogus.rv.search.HeuristicSearch` protocols and a `start-node`
+  and `goal-node` describing the bounds of the search. Returns of map
+  with keys `:path` mapped to a sequence of nodes from `start-node` to
+  `goal-node` and `:cost` describing the cost of the path. This search
+  guarantees to return the lowest cost path as long as one exists.
+  In the event that there is no path to the `goal-node` the current result
+  is undefined."
   [graph start-node goal-node]
   (loop [steps 0
          graph graph
@@ -31,16 +39,16 @@
             oldcost (:cost (search/route-of graph node))]
         (if (= node goal-node)
           (recur (inc steps)
-                 (search/report-route graph node
-                                      {:cost newcost 
-                                       :path (conj (:path cheapest-nbr []) node)})
+                 (search/add-route graph node
+                                   {:cost newcost 
+                                    :path (conj (:path cheapest-nbr []) node)})
                  rest-work-queue)
           (if (and oldcost (>= newcost oldcost))
             (recur (inc steps) graph rest-work-queue)
             (recur (inc steps)
-                   (search/report-route graph node
-                                        {:cost newcost 
-                                         :path (conj (:path cheapest-nbr []) node)})
+                   (search/add-route graph node
+                                     {:cost newcost 
+                                      :path (conj (:path cheapest-nbr []) node)})
                    (into rest-work-queue
                          (map #(vector (total-cost graph newcost % goal-node) %) neighbors)))))))))
 

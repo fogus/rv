@@ -18,7 +18,7 @@
   search/GraphSearch
   (neighbors-of [_ yx]
     (neighbors dirs (count yxcosts) yx))
-  (report-route [_ node new-path]
+  (add-route [_ node new-path]
     (SimpleAsciiGraph. dirs step-est yxcosts (assoc-in routes node new-path)))
   (route-of [_ node]
     (get-in routes node))
