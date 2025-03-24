@@ -10,7 +10,7 @@ Explorations in pure reasoning algorithms with Clojure.
 
 OR
 
-    io.github.fogus/rv {:git/tag "v0.0.7" :git/sha "TBD"}
+    io.github.fogus/rv {:git/tag "v0.0.7" :git/sha "542f6b38c4c116711436cc511b576b89a8543733"}
 
 ### Leiningen
 
