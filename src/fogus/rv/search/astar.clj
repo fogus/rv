@@ -40,14 +40,14 @@
         (if (= node goal-node)
           (recur (inc steps)
                  (search/add-route graph node
-                                   {:cost newcost 
+                                   {:cost newcost
                                     :path (conj (:path cheapest-nbr []) node)})
                  rest-work-queue)
           (if (and oldcost (>= newcost oldcost))
             (recur (inc steps) graph rest-work-queue)
             (recur (inc steps)
                    (search/add-route graph node
-                                     {:cost newcost 
+                                     {:cost newcost
                                       :path (conj (:path cheapest-nbr []) node)})
                    (into rest-work-queue
                          (map #(vector (total-cost graph newcost % goal-node) %) neighbors)))))))))

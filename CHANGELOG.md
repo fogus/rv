@@ -1,5 +1,14 @@
+# v0.0.7
+- Added (fogus.rv.util/f-by [f key coll]) combinator to build Clojure-style `*-by`
+  functions.
+- Added fogus.rv.search ns containing search-related protocols GraphSearch and
+  HeuristicSearch.
+- Refined fogus.rv.search.astar/astar to work in terms of the GraphSearch and
+  HeuristicSearch protocols. Takes a graph object implementing those protocols
+  plus a start node and goal node to find the lowest cost path between them.
+
 # v0.0.6
-- Add fogus.rv.constraints ns exposing two functions: satisfy1 and satisfy* that take 
+- Added fogus.rv.constraints ns exposing two functions: satisfy1 and satisfy* that take
   a constraint description containing :variables and :formula mappings and return
   context(s) defining bindings for the variables constrained by formula.
 - Added a bibtex file with the references for rv
