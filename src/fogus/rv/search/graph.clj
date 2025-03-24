@@ -1,4 +1,4 @@
-(ns fogus.rv.search.astar
+(ns fogus.rv.search.graph
   "A* search implementation."
   (:require [fogus.rv.search :as search]
             [fogus.rv.util :as util]))

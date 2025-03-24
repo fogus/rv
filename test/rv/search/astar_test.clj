@@ -1,7 +1,7 @@
 (ns rv.search.astar-test
   (:require [clojure.test :refer :all]
             [fogus.rv.search :as search]
-            [fogus.rv.search.astar :as a*]))
+            [fogus.rv.search.graph :as graph]))
 
 (def ^:private ^:const ORTHO-DIRS [[-1 0] [1 0] [0 -1] [0 1]])
 
@@ -37,7 +37,7 @@
                  [  1 999 999 999 999]
                  [  1   1   1   1   1]]
         z-graph (SimpleAsciiGraph. ORTHO-DIRS 900 z-world (init-routes z-world))
-        res (a*/astar z-graph [0 0] [4 4])]
+        res (graph/astar z-graph [0 0] [4 4])]
     (is (= 17 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [2 3] [2 2] [2 1] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -48,7 +48,7 @@
                    [1 1 1 999 1]
                    [1 1 1 1   1]]
         down-graph (SimpleAsciiGraph. ORTHO-DIRS 900 down-path (init-routes down-path))
-        res (a*/astar down-graph [0 0] [4 4])]
+        res (graph/astar down-graph [0 0] [4 4])]
     (is (= 9 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [1 2] [2 2] [3 2] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -59,7 +59,7 @@
                  [1 1 1 999 1]
                  [1 1 1 3   1]]
         up-graph (SimpleAsciiGraph. ORTHO-DIRS 900 up-path (init-routes up-path))
-        res (a*/astar up-graph [0 0] [4 4])]
+        res (graph/astar up-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [3 4] [4 4]]
            (:path res))))
@@ -70,7 +70,7 @@
                 [1 2 2 999 1]
                 [1 1 1 2   1]]
         l-graph (SimpleAsciiGraph. ORTHO-DIRS 900 l-path (init-routes l-path))
-        res (a*/astar l-graph [0 0] [4 4])]
+        res (graph/astar l-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [1 0] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
            (:path res))))
@@ -81,7 +81,7 @@
                     [1 1 1 999 1]
                     [1 1 1 1   1]]
         short-graph (SimpleAsciiGraph. ORTHO-DIRS 900 short-path (init-routes short-path))
-        res (a*/astar short-graph [0 0] [1 1])]
+        res (graph/astar short-graph [0 0] [1 1])]
     (is (= 2 (:cost res)))
     (is (= [[0 0] [1 0] [1 1]]
            (:path res)))))
