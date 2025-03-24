@@ -4,7 +4,7 @@
 (def lib 'me.fogus/rv)
 (def description "Code conversations in Clojure regarding the application of pure search, reasoning, and query algorithms.")
 ;;(def version (format "0.0.%s" (b/git-count-revs nil)))
-(def version "0.0.6")
+(def version "0.0.7")
 (def class-dir "target/classes")
 (def jar-file (format "target/%s.jar" (name lib)))
 

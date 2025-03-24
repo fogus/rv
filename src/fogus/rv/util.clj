@@ -18,3 +18,8 @@
     (for [more (cart (rest colls))
           x (first colls)]
       (cons x more))))
+
+(defn f-by [f key coll]
+  (when (seq coll)
+    (reduce #(f key %1 %2)
+            coll)))
