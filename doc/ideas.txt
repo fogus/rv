@@ -1,0 +1,14 @@
+Some possible implementations to explore:
+
+- Frames
+- BEINGS
+- Goal reduction
+- Hillcliming search
+- Microkanren
+- pmatch
+- Version Spaces
+- https://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/reasonng/0.html
+- "Building Problem Solvers"
+- Add a smarter quiessence function to productions rules
+- Relational algebra (built on clojure.set)
+- https://www.youtube.com/watch?v=HB5TrK7A4pI
