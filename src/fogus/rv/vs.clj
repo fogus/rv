@@ -105,3 +105,37 @@
 (defn terminated? [vs]
   (and (empty? (:G vs)) (empty? (:S vs))))
 
+(defn- boundary
+  [cmp-fn f & args]
+  (when args
+    (reduce (fn [a b]
+              (if (cmp-fn (compare (f b) (f a)))
+                b
+                a))
+            args)))
+
+(defn- least-by
+  "Return the argument for which f yields the smallest value."
+  [f & args]
+  (apply boundary neg? f args))
+
+(defn- normalize-example [example]
+  (rest (butlast example)))
+
+(defn- get-positive-examples [groups key]
+  (map normalize-example (get groups key)))
+
+(defn- get-negative-examples [groups key]
+  (map normalize-example (reduce concat '() (vals (dissoc groups key)))))
+
+(defn arity [n]
+  (vec (repeat n '?)))
+
+(defn gen-star [pos_example negatives]
+  (reduce (fn [vs neg_example]
+            (negative vs neg_example))
+          (positive
+           (gen-version-space (count pos_example))
+           pos_example)
+          negatives)
+)

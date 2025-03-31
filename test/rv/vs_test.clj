@@ -17,7 +17,7 @@
   (is (= [[:round vs/G? vs/G?] [vs/G? vs/G? :small]] (vs/-specialize [vs/G? vs/G? vs/G?] [:square :blue :large] [:round :blue :small]))))
 
 (deftest termination-test
-  (is (vs/terminated? (-> (vs/-init '[? ?])
+  (is (vs/terminated? (-> (vs/-init (vs/arity 2))
                           (#'vs/positive '("rund" "schwarzrot"))
                           (#'vs/positive '("rund" "schwarzweiss"))
                           (#'vs/negative '("rund" "blau"))))))
