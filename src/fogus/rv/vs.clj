@@ -6,7 +6,7 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 
-(ns fogus.reinen-vernunft.vs)
+(ns fogus.rv.vs)
 
 (def ^:const S? :_)
 (def ^:const G? :*)
@@ -58,24 +58,6 @@
        :G [(into (-wrap [] []) (repeat d G?))]
        :domain d})))
 
-(comment
-  (-generalize [] [:a :b])
-  (-generalize [:a] [:a])
-  (-generalize [S?] [:a])
-  (-generalize [:a S?] [:a :b])
-  (-generalize [:b] [S?])
-  (-generalize [:a] [:b])
-  (-generalize [:a :b] [:z :b])
-
-  (get-potential-positions [:round G?] [:round :yellow] [:round :blue])
-  
-  (-specialize [:round G?] [:round :yellow] [:round :blue])
-  (-specialize [G? G?] [:square :blue] [:round :blue])
-  (-specialize [G? G? G?] [:square :blue :large] [:round :blue :small])
-
-  (-init '[? ? ?])
-)
-
 (defn- includes? [a b]
   (or (= a b) (= a G?)))
 
@@ -83,7 +65,6 @@
   (every? true? (map includes? a b)))
 
 (defn- positive [{:keys [S G domain]} example]
-  (println [G example])
   {:G (filter #(more-general? %1 example) G)
    
    :S (filter
@@ -121,15 +102,6 @@
 
    :domain domain})
 
-(comment
+(defn terminated? [vs]
+  (and (empty? (:G vs)) (empty? (:S vs))))
 
-  (-> (-init '[? ? ?])
-      (positive [:vocal :jazz 50])
-      (negative [:band :pop  70])
-      (negative [:band :pop  80])
-      (negative [:solo :jazz 40])
-      (positive [:vocal :jazz 50])
-      (negative [:orchestra :classical 100])
-      (positive [:vocal :jazz 70]))
-  
-)
