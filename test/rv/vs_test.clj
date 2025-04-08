@@ -16,9 +16,9 @@
   (is (= [* :b] (vs/-generalize [:a :b] [:z :b]))))
 
 (deftest specialization-test
-  (is (= [[:round :blue]] (vs/-specialize [:round *] [:round :yellow] [:round :blue])))
-  (is (= [[:round *]] (vs/-specialize [* *] [:square :blue] [:round :blue])))
-  (is (= [[:round * *] [* * :small]] (vs/-specialize [* * *] [:square :blue :large] [:round :blue :small]))))
+  (is (= [[:small :blue]] (vs/-specialize [:small *] [:small :yellow] [:small :blue])))
+  (is (= [[:small *]] (vs/-specialize [* *] [:mid :blue] [:small :blue])))
+  (is (= [[:small * *] [* * :small]] (vs/-specialize [* * *] [:mid :blue :large] [:small :blue :small]))))
 
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
