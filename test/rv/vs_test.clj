@@ -18,9 +18,9 @@
 
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
-                          (#'vs/positive '("rund" "schwarzrot"))
-                          (#'vs/positive '("rund" "schwarzweiss"))
-                          (#'vs/negative '("rund" "blau"))))))
+                          (#'vs/positive '(1 2))
+                          (#'vs/positive '(3 4))
+                          (#'vs/negative '(5 6))))))
 
 (deftest s&g-tests
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 3))
