@@ -18,7 +18,7 @@
 (deftest specialization-test
   (is (= [[:small :blue]] (vs/-specialize [:small *] [:small :yellow] [:small :blue])))
   (is (= [[:small *]] (vs/-specialize [* *] [:mid :blue] [:small :blue])))
-  (is (= [[:small * *] [* * :small]] (vs/-specialize [* * *] [:mid :blue :nested] [:small :blue :tree]))))
+  (is (= [[:small * *] [* * :laying]] (vs/-specialize [* * *] [:mid :blue :standing] [:small :blue :laying]))))
 
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
@@ -51,8 +51,7 @@
             [* * * * * * * "Orioles" * * *]
             [* * * * * * * * "Active" * *]]))
     (is (= S
-           [[* "P" "R" "MLB" "Active" "AL" "East" "Orioles" "Active" * *]]
-           )))
+           [[* "P" "R" "MLB" "Active" "AL" "East" "Orioles" "Active" * *]])))
 
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 6))
                           (#'vs/positive [:sunny :warm :normal :strong :warm :same])
