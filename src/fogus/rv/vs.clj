@@ -66,17 +66,21 @@
   (every? true? (map includes? a b)))
 
 (defn- positive [{:keys [S G domain]} example]
-  {:G (filter #(more-general? %1 example) G)
-   
-   :S (filter
-       (fn [s] (not-any? #(more-general? s %1) G))
-       (map (fn [s]
-              (if (not (more-general? s example))
-                (-generalize s example)
-                s))
-            S))
+  (let [g' (filter #(more-general? %1 example) G)]
+    {:G g'
+     
+     :S (let [s' (map (fn [s]
+                        (if (not (more-general? s example))
+                          (-generalize s example)
+                          s))
+                      S)]
+          (if (= g' s')
+            s'
+            (filter
+             (fn [s] (not-any? #(more-general? s %1) G))
+             s')))
 
-   :domain domain})
+     :domain domain}))
 
 (defn- negative [{:keys [S G domain]} example]
   {:G (reduce (fn [acc g]
@@ -106,17 +110,10 @@
 (defn terminated? [vs]
   (and (empty? (:G vs)) (empty? (:S vs))))
 
+(defn converged? [vs]
+  (and (= 1 (count (:G vs))) (= 1 (count (:S vs)))
+       (= (:G vs) (:S vs))))
+
 (defn arity [n]
   (vec (repeat n '?)))
 
-(comment
-
-  (-> (-init (arity 5))
-      (positive [:japan "Honda"    :blue  1980 :economy])
-      (negative [:japan "Toyota"   :green 1970 :sports])
-      (positive [:japan "Toyota"   :blue  1990 :economy])
-      (negative [:usa   "Chrysler" :red   1980 :economy])
-      (positive [:japan "Honda"    :white 1980 :economy])
-      )
-
-)
