@@ -1,6 +1,6 @@
-(ns rv.vs-test
+(ns rv.learn.vs-test
   (:require [clojure.test :refer :all]
-            [fogus.rv.vs :as vs])
+            [fogus.rv.learn.vs :as vs])
   (:refer-clojure :exclude [*]))
 
 (def ^:const _ vs/?S)
