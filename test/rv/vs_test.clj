@@ -19,8 +19,9 @@
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
                           (#'vs/positive '(1 2))
-                          (#'vs/positive '(3 4))
-                          (#'vs/negative '(5 6))))))
+                          (#'vs/positive '(:a :b))
+                          (#'vs/negative '("c" "d"))
+                          (#'vs/negative '([] [1]))))))
 
 (deftest s&g-tests
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 3))
@@ -35,18 +36,18 @@
     (is (= [[:vocal :jazz vs/?G]] S)))
 
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 11))
-                          (#'vs/positive '("neu" "VW" "90-120" "< 2 l" "< 180" "Diesel" "< 6 l" "Minivan" "8" "silber/grau" "< 25000"))
-                          (#'vs/positive '("< 2 Jahre" "VW" "90-120" "< 2 l" "< 180" "Diesel" "< 6 l" "Minivan" "8" "grün" "< 20000"))
-                          (#'vs/negative '("2-5 Jahre" "Peugeot" "75-90" "< 2 l" "< 180" "Super" "< 8 l" "kompakt" "5" "silber/grau" "< 7500")))]
+                          (#'vs/positive '("rookie"  "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 19 "Mike"))
+                          (#'vs/positive '("veteran" "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 23 "Jeff"))
+                          (#'vs/negative '("ace"     "LF" "L" "MLB" "Active" "NL" "West" "Giants"  "IL"     19 "Jamie")))]
     (is (= G
-           [[vs/?G "VW" vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G]
-            [vs/?G vs/?G "90-120" vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G]
-            [vs/?G vs/?G vs/?G vs/?G vs/?G "Diesel" vs/?G vs/?G vs/?G vs/?G vs/?G]
-            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "< 6 l" vs/?G vs/?G vs/?G vs/?G]
-            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "Minivan" vs/?G vs/?G vs/?G]
-            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "8" vs/?G vs/?G]]))
+           [[vs/?G "P" vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G]
+            [vs/?G vs/?G "R" vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G]
+            [vs/?G vs/?G vs/?G vs/?G vs/?G "AL" vs/?G vs/?G vs/?G vs/?G vs/?G]
+            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "East" vs/?G vs/?G vs/?G vs/?G]
+            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "Orioles" vs/?G vs/?G vs/?G]
+            [vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G vs/?G "Active" vs/?G vs/?G]]))
     (is (= S
-           [[vs/?G "VW" "90-120" "< 2 l" "< 180" "Diesel" "< 6 l" "Minivan" "8" vs/?G vs/?G]]
+           [[vs/?G "P" "R" "MLB" "Active" "AL" "East" "Orioles" "Active" vs/?G vs/?G]]
            )))
 
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 6))
