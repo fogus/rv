@@ -23,3 +23,6 @@
   (when (seq coll)
     (reduce #(f key %1 %2)
             coll)))
+
+(defn pairwise-every? [pred xs ys]
+  (every? identity (map pred xs ys)))

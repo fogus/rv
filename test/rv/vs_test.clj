@@ -22,27 +22,27 @@
 
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
-                          (#'vs/positive '(1 2))
-                          (#'vs/positive '(:a :b))
-                          (#'vs/negative '("c" "d"))
-                          (#'vs/negative '([] [1]))))))
+                          (vs/refine '(1 2) true)
+                          (vs/refine '(:a :b) true)
+                          (vs/refine '("c" "d") false)
+                          (vs/refine '([] [1]) false)))))
 
 (deftest s&g-tests
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 3))
-                          (#'vs/positive [:vocal :jazz 50])
-                          (#'vs/negative [:band :pop  70])
-                          (#'vs/negative [:band :pop  80])
-                          (#'vs/negative [:solo :jazz 40])
-                          (#'vs/positive [:vocal :jazz 50])
-                          (#'vs/negative [:orchestra :classical 100])
-                          (#'vs/positive [:vocal :jazz 70]))]
+                          (vs/refine [:vocal :jazz 50] true)
+                          (vs/refine [:band :pop  70] false)
+                          (vs/refine [:band :pop  80] false)
+                          (vs/refine [:solo :jazz 40] false)
+                          (vs/refine [:vocal :jazz 50] true)
+                          (vs/refine [:orchestra :classical 100] false)
+                          (vs/refine [:vocal :jazz 70] true))]
     (is (= [[:vocal * *]] G))
     (is (= [[:vocal :jazz *]] S)))
 
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 11))
-                          (#'vs/positive '("rookie"  "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 19 "Mike"))
-                          (#'vs/positive '("veteran" "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 23 "Jeff"))
-                          (#'vs/negative '("ace"     "LF" "L" "MLB" "Active" "NL" "West" "Giants"  "IL"     19 "Jamie")))]
+                          (vs/refine '("rookie"  "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 19 "Mike") true)
+                          (vs/refine '("veteran" "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 23 "Jeff") true)
+                          (vs/refine '("ace"     "LF" "L" "MLB" "Active" "NL" "West" "Giants"  "IL"     19 "Jamie") false))]
     (is (= G
            [[* "P" * * * * * * * * *]
             [* * "R" * * * * * * * *]
@@ -54,23 +54,23 @@
            [[* "P" "R" "MLB" "Active" "AL" "East" "Orioles" "Active" * *]])))
 
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 6))
-                          (#'vs/positive [:sunny :warm :normal :strong :warm :same])
-                          (#'vs/positive [:sunny :warm :high   :strong :warm :same])
-                          (#'vs/negative [:rainy :cold :high   :strong :warm :change])
-                          (#'vs/positive [:sunny :warm :high   :strong :cool :change]))]
+                          (vs/refine [:sunny :warm :normal :strong :warm :same] true)
+                          (vs/refine [:sunny :warm :high   :strong :warm :same] true)
+                          (vs/refine [:rainy :cold :high   :strong :warm :change] false)
+                          (vs/refine [:sunny :warm :high   :strong :cool :change] true))]
     (is (= G [[:sunny * * * * *] [* :warm * * * *]]))
     (is (= S [[:sunny :warm * :strong * *]]))))
 
 (deftest convergence-test
   (let [{:keys [S G] :as V} (-> (vs/-init (vs/arity 5))
-                                (#'vs/positive [:japan "Honda"    :blue  1980 :economy]))]
+                                (vs/refine [:japan "Honda"    :blue  1980 :economy] true))]
     (testing "CONVERGENCE TEST STEP 1"
       (is (= G [[* * * * *]]))
       (is (= S [[:japan "Honda" :blue 1980 :economy]]))
       (is (not (vs/converged? V))))
 
     (testing "CONVERGENCE TEST STEP 2"
-      (let [{:keys [S G] :as V} (-> V (#'vs/negative [:japan "Toyota"   :green 1970 :sports]))]
+      (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Toyota"   :green 1970 :sports] false))]
         (is (= G [[* "Honda" * * *]
                   [* * :blue * *]
                   [* * * 1980 *]
@@ -79,20 +79,20 @@
         (is (not (vs/converged? V)))
 
         (testing "CONVERGENCE TEST STEP 3"
-          (let [{:keys [S G] :as V} (-> V (#'vs/positive [:japan "Toyota"   :blue  1990 :economy]))]
+          (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Toyota"   :blue  1990 :economy] true))]
             (is (= G [[* * :blue * *]
                       [* * * * :economy]]))
             (is (= S [[:japan * :blue * :economy]]))
             (is (not (vs/converged? V)))
 
             (testing "CONVERGENCE TEST STEP 4"
-              (let [{:keys [S G] :as V} (-> V (#'vs/negative [:usa   "Chrysler" :red   1980 :economy]))]
+              (let [{:keys [S G] :as V} (-> V (vs/refine [:usa   "Chrysler" :red   1980 :economy] false))]
                 (is (= G [[* * :blue * *]
                           [:japan * * * :economy]]))
                 (is (= S [[:japan * :blue * :economy]]))
                 (is (not (vs/converged? V)))
 
                 (testing "CONVERGENCE TEST STEP 5 - LAST"
-                  (let [{:keys [S G] :as V} (-> V (#'vs/positive [:japan "Honda"    :white 1980 :economy]))]
+                  (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Honda"    :white 1980 :economy] true))]
                     (is (vs/converged? V))))))))))))
 

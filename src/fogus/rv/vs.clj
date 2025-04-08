@@ -7,7 +7,8 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns fogus.rv.vs
-  (:require [fogus.rv.core :as core]))
+  (:require [fogus.rv.core :as core]
+            [fogus.rv.util :as util]))
 
 (def ^:const ?S (core/->IgnoreT))
 (def ^:const ?G (core/->AnyT))
@@ -59,11 +60,9 @@
        :G [(into (-wrap [] []) (repeat d ?G))]
        :domain d})))
 
-(defn- includes? [a b]
-  (or (= a b) (= a ?G)))
-
-(defn- more-general? [a b]
-  (every? true? (map includes? a b)))
+(def ^:private more-general?
+  (fn [patt data]
+    (util/pairwise-every? #(or (= %1 %2) (= %1 ?G)) patt data)))
 
 (defn terminated?
   ([vs] (terminated? (:G vs) (:S vs)))
@@ -120,3 +119,10 @@
 (defn arity [n]
   (vec (repeat n '?)))
 
+(defn refine
+  ([vs example]
+   (refine vs example (-> example meta :positive)))
+  ([vs example positive?]
+   (if positive?
+     (positive vs example)
+     (negative vs example))))
