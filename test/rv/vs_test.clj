@@ -18,7 +18,7 @@
 (deftest specialization-test
   (is (= [[:small :blue]] (vs/-specialize [:small *] [:small :yellow] [:small :blue])))
   (is (= [[:small *]] (vs/-specialize [* *] [:mid :blue] [:small :blue])))
-  (is (= [[:small * *] [* * :small]] (vs/-specialize [* * *] [:mid :blue :large] [:small :blue :small]))))
+  (is (= [[:small * *] [* * :small]] (vs/-specialize [* * *] [:mid :blue :nested] [:small :blue :tree]))))
 
 (deftest termination-test
   (is (vs/terminated? (-> (vs/-init (vs/arity 2))
