@@ -65,6 +65,16 @@
 (defn- more-general? [a b]
   (every? true? (map includes? a b)))
 
+(defn terminated?
+  ([vs] (terminated? (:G vs) (:S vs)))
+  ([g s]
+   (and (empty? g) (empty? s))))
+
+(defn converged?
+  ([vs] (converged? (:G vs) (:S vs)))
+  ([g s]
+   (and (= 1 (count g)) (= 1 (count s)) (= g s))))
+
 (defn- positive [{:keys [S G domain]} example]
   (let [g' (filter #(more-general? %1 example) G)]
     {:G g'
@@ -74,7 +84,7 @@
                           (-generalize s example)
                           s))
                       S)]
-          (if (= g' s')
+          (if (converged? g' s')
             s'
             (filter
              (fn [s] (not-any? #(more-general? s %1) G))
@@ -106,13 +116,6 @@
    :S (filter #(not (more-general? %1 example)) S)
 
    :domain domain})
-
-(defn terminated? [vs]
-  (and (empty? (:G vs)) (empty? (:S vs))))
-
-(defn converged? [vs]
-  (and (= 1 (count (:G vs))) (= 1 (count (:S vs)))
-       (= (:G vs) (:S vs))))
 
 (defn arity [n]
   (vec (repeat n '?)))
