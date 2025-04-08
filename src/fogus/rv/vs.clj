@@ -6,10 +6,11 @@
 ;   the terms of this license.
 ;   You must not remove this notice, or any other, from this software.
 
-(ns fogus.rv.vs)
+(ns fogus.rv.vs
+  (:require [fogus.rv.core :as core]))
 
-(def ^:const S? :_)
-(def ^:const G? :*)
+(def ^:const ?S (core/->IgnoreT))
+(def ^:const ?G (core/->AnyT))
 
 (defprotocol S&G
   (-generalize [lhs rhs])
@@ -21,10 +22,10 @@
   (-wrap lhs
          (map (fn [a b]
                 (cond
-                  (= a S?) b
-                  (= b S?) a
+                  (= a ?S) b
+                  (= b ?S) a
                   (= a b) a
-                  :default G?))
+                  :default ?G))
               lhs
               rhs)))
 
@@ -34,7 +35,7 @@
     (cons (first g) (specialize-at-position (rest g) (rest s) (- pos 1)))))
 
 (defn- position-can-be-specialized? [g neg s]
-  (and (= g G?) (not= s neg)))
+  (and (= g ?G) (not= s neg)))
 
 (defn- get-potential-positions [g neg s]
   (keep-indexed
@@ -54,12 +55,12 @@
   (-specialize [lhs neg rhs] (specialize-sequence lhs neg rhs))
   (-init [tmpl]
     (let [d (count tmpl)]
-      {:S [(into (-wrap [] []) (repeat d S?))]
-       :G [(into (-wrap [] []) (repeat d G?))]
+      {:S [(into (-wrap [] []) (repeat d ?S))]
+       :G [(into (-wrap [] []) (repeat d ?G))]
        :domain d})))
 
 (defn- includes? [a b]
-  (or (= a b) (= a G?)))
+  (or (= a b) (= a ?G)))
 
 (defn- more-general? [a b]
   (every? true? (map includes? a b)))

@@ -35,6 +35,16 @@
 
 (def lv? #(instance? LVar %))
 
+(deftype IgnoreT []
+  Object
+  (toString [_] "_")
+  (equals [_ o] (instance? IgnoreT o)))
+
+(deftype AnyT []
+  Object
+  (toString [_] "*")
+  (equals [_ o] (instance? AnyT o)))
+
 (defmethod print-method LVar [lvar ^Writer writer]
   (.write writer (str lvar)))
 
