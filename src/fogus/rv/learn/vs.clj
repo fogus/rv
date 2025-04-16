@@ -19,41 +19,28 @@
   (-wrap [basis coll])
   (-init [basis] [basis domain]))
 
-(defn- generalize-sequence [lhs rhs]
-  (-wrap lhs
-         (map (fn [a b]
-                (cond
-                  (= a ?S) b
-                  (= b ?S) a
-                  (= a b) a
-                  :default ?G))
-              lhs
-              rhs)))
-
-(defn- specialize-at-position [g s pos]
-  (if (= pos 0)
+(defn- specialize-at [g s k]
+  (if (= k 0)
     (cons (first s) (rest g))
-    (cons (first g) (specialize-at-position (rest g) (rest s) (- pos 1)))))
+    (cons (first g) (specialize-at (rest g) (rest s) (- k 1)))))
 
-(defn- position-can-be-specialized? [g neg s]
-  (and (= g ?G) (not= s neg)))
+(defn- specializable? [gen neg-example spec]
+  (and (= gen ?G) (not= spec neg-example)))
 
-(defn- get-potential-positions [g neg s]
-  (keep-indexed
-   (fn [index specializable]
-     (when specializable index))
-   (map position-can-be-specialized? g neg s)))
-
-(defn- specialize-sequence [g neg s]
-  (map 
-   (fn [pos] (-wrap g (specialize-at-position g s pos)))
-   (get-potential-positions g neg s)))
+(defn- generalizable? [l r]
+  (cond (= l ?S) r
+        (= r ?S) l
+        (= l r)  l
+        :default ?G))
 
 (extend-protocol S&G
   clojure.lang.PersistentVector
   (-wrap [_ coll] (into [] coll))
-  (-generalize [lhs rhs] (generalize-sequence lhs rhs))
-  (-specialize [lhs neg rhs] (specialize-sequence lhs neg rhs))
+  (-generalize [lhs rhs]
+    (-wrap lhs (map generalizable? lhs rhs)))
+  (-specialize [lhs neg rhs]
+    (map #(-wrap lhs (specialize-at lhs rhs %))
+         (util/positions-of specializable? lhs neg rhs)))
   (-init [tmpl]
     (let [d (count tmpl)]
       {:S [(into (-wrap [] []) (repeat d ?S))]
@@ -72,7 +59,7 @@
 (defn converged?
   ([vs] (converged? (:G vs) (:S vs)))
   ([g s]
-   (and (= 1 (count g)) (= 1 (count s)) (= g s))))
+   (and (= 1 (bounded-count 2 g) (bounded-count 2 s)) (= g s))))
 
 (defn- positive [{:keys [S G domain]} example]
   (let [g' (filter #(more-general? %1 example) G)]
