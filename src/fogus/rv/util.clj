@@ -23,3 +23,9 @@
   (when (seq coll)
     (reduce #(f key %1 %2)
             coll)))
+
+(defn pairwise-every? [pred xs ys]
+  (every? identity (map pred xs ys)))
+
+(defn positions-of [pred & xs]
+  (keep-indexed #(when %2 %1) (apply map pred xs)))

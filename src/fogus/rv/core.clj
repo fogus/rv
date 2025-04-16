@@ -35,8 +35,24 @@
 
 (def lv? #(instance? LVar %))
 
+(deftype IgnoreT []
+  Object
+  (toString [_] "_")
+  (equals [_ o] (instance? IgnoreT o)))
+
+(deftype AnyT []
+  Object
+  (toString [_] "*")
+  (equals [_ o] (instance? AnyT o)))
+
 (defmethod print-method LVar [lvar ^Writer writer]
   (.write writer (str lvar)))
+
+(defmethod print-method IgnoreT [i ^Writer writer]
+  (.write writer (str i)))
+
+(defmethod print-method AnyT [a ^Writer writer]
+  (.write writer (str a)))
 
 (def ID_KEY :kb/id)
 
