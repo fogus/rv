@@ -16,52 +16,59 @@
 (defprotocol S&G
   (-generalize [lhs rhs])
   (-specialize [lhs neg rhs])
-  (-wrap [basis coll])
-  (-init [basis] [basis domain]))
+  (-init [basis] [basis arity]))
 
-(defn- specialize-at [g s k]
-  (if (= k 0)
-    (cons (first s) (rest g))
-    (cons (first g) (specialize-at (rest g) (rest s) (- k 1)))))
+(defn- specializable? [g neg-example s]
+  (and (= g ?G) (not= s neg-example)))
 
-(defn- specializable? [gen neg-example spec]
-  (and (= gen ?G) (not= spec neg-example)))
-
-(defn- generalizable? [l r]
-  (cond (= l ?S) r
-        (= r ?S) l
-        (= l r)  l
+(defn- maybe-generalize [g s]
+  (cond (= g ?S) s
+        (= s ?S) g
+        (= g s)  g
         :default ?G))
+
+(defn- specialization-indexes [g neg s]
+  (util/positions-of specializable? g neg s))
+
+(defn- generalize-sequential [g s]
+  (map maybe-generalize g s))
+
+(defn- specialize-with [f g neg s]
+  (map f (specialization-indexes g neg s)))
 
 (extend-protocol S&G
   clojure.lang.PersistentVector
-  (-wrap [_ coll] (into [] coll))
-  (-generalize [lhs rhs]
-    (-wrap lhs (map generalizable? lhs rhs)))
-  (-specialize [lhs neg rhs]
-    (map #(-wrap lhs (specialize-at lhs rhs %))
-         (util/positions-of specializable? lhs neg rhs)))
+  (-generalize [g s]
+    (vec (generalize-sequential g s)))
+  (-specialize [g neg s]
+    (vec (specialize-with #(assoc g % (get s %)) g neg s)))
   (-init [tmpl]
     (let [d (count tmpl)]
-      {:S [(into (-wrap [] []) (repeat d ?S))]
-       :G [(into (-wrap [] []) (repeat d ?G))]
-       :domain d})))
+      {:S [(vec (repeat d ?S))]
+       :G [(vec (repeat d ?G))]
+       :arity d})))
 
-(def ^:private more-general?
-  (fn [patt data]
-    (util/pairwise-every? #(or (= %1 %2) (= %1 ?G)) patt data)))
+(defn- more-general? [patt data]
+  (util/pairwise-every? #(or (= %1 %2) (= %1 ?G)) patt data))
 
-(defn terminated?
-  ([vs] (terminated? (:G vs) (:S vs)))
+(defn collapsed?
+  "Returns if a version space vs or a most-general hypothesis g and a
+  most-specific hypothesis s have collapsed. That is, training has
+  caused the hypotheses to become inconsistent, making further classification
+  impossible."
+  ([vs] (collapsed? (:G vs) (:S vs)))
   ([g s]
    (and (empty? g) (empty? s))))
 
 (defn converged?
+  "Returns if a version space vs or a most-general hypothesis g and a
+  most-specific hypothesis s have converged. That is, training has
+  caused the hypotheses to ground to a single legal case."
   ([vs] (converged? (:G vs) (:S vs)))
   ([g s]
    (and (= 1 (bounded-count 2 g) (bounded-count 2 s)) (= g s))))
 
-(defn- positive [{:keys [S G domain]} example]
+(defn- positive [{:keys [S G arity]} example]
   (let [g' (filter #(more-general? %1 example) G)]
     {:G g'
      
@@ -76,37 +83,40 @@
              (fn [s] (not-any? #(more-general? s %1) G))
              s')))
 
-     :domain domain}))
+     :arity arity}))
 
-(defn- negative [{:keys [S G domain]} example]
+(defn- negative [{:keys [S G arity]} example]
   {:G (reduce (fn [acc g]
                 (if (not (more-general? g example))
-                  (concat acc (list g))
-                  (concat acc
-                          (reduce (fn [acc new_g]
-                                    (if (and
-                                         (not (more-general? new_g example))
-                                         (every? (fn [pe] more-general? new_g pe) S)
-                                         (not-any? (fn [other_g]
-                                                     (and
-                                                      (not (= g other_g))
-                                                      (more-general? other_g new_g)))
-                                                   G))
-                                      (concat acc (list new_g))
-                                      acc))
-                                  '()
+                  (conj acc g)
+                  (into acc
+                        (reduce (fn [acc g']
+                                  (if (and (not (more-general? g' example))
+                                           (every? #(more-general? g' %) S)
+                                           (not-any? #(and (not= g %) (more-general? % g')) G))
+                                    (conj acc g')
+                                    acc))
+                                  []
                                   (-specialize g example (first S))))))
-              '()
+              []
               G)
 
    :S (filter #(not (more-general? %1 example)) S)
 
-   :domain domain})
+   :arity arity})
 
-(defn arity [n]
+(defn arity
+  "Returns a vector template for arity n."
+  [n]
   (vec (repeat n '?)))
 
 (defn refine
+  "Given a version space vs and an example, returns a new version space
+  with hypotheses adjusted according to the given example's elements and
+  its classification. An example is classified by attaching a metadata mapping
+  :positive? -> boolean or by passing a boolean as the last argument. The
+  explicit classification argument will always dominate the metadata
+  classification."
   ([vs example]
    (refine vs example (-> example meta :positive)))
   ([vs example positive?]

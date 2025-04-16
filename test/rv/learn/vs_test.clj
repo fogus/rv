@@ -20,12 +20,12 @@
   (is (= [[:small *]] (vs/-specialize [* *] [:mid :blue] [:small :blue])))
   (is (= [[:small * *] [* * :laying]] (vs/-specialize [* * *] [:mid :blue :standing] [:small :blue :laying]))))
 
-(deftest termination-test
-  (is (vs/terminated? (-> (vs/-init (vs/arity 2))
-                          (vs/refine '(1 2) true)
-                          (vs/refine '(:a :b) true)
-                          (vs/refine '("c" "d") false)
-                          (vs/refine '([] [1]) false)))))
+(deftest collapsed-test
+  (is (vs/collapsed? (-> (vs/-init (vs/arity 2))
+                         (vs/refine '(1 2) true)
+                         (vs/refine '(:a :b) true)
+                         (vs/refine '("c" "d") false)
+                         (vs/refine '([] [1]) false)))))
 
 (deftest s&g-tests
   (let [{:keys [S G]} (-> (vs/-init (vs/arity 3))
