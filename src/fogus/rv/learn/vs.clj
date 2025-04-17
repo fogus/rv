@@ -8,15 +8,12 @@
 
 (ns fogus.rv.learn.vs
   (:require [fogus.rv.core :as core]
+            [fogus.rv.learn :as proto]
             [fogus.rv.util :as util]))
 
 (def ^:const ?S (core/->IgnoreT))
 (def ^:const ?G (core/->AnyT))
-
-(defprotocol S&G
-  (-generalize [lhs rhs])
-  (-specialize [lhs neg rhs])
-  (-init [basis] [basis arity]))
+(def ^:const ?? (core/->AskT))
 
 (defn- specializable? [g neg-example s]
   (and (= g ?G) (not= s neg-example)))
@@ -36,20 +33,67 @@
 (defn- specialize-with [f g neg s]
   (map f (specialization-indexes g neg s)))
 
-(extend-protocol S&G
+(extend-protocol proto/S&G
   clojure.lang.PersistentVector
-  (-generalize [g s]
+  (proto/-generalize [g s]
     (vec (generalize-sequential g s)))
-  (-specialize [g neg s]
+  (proto/-specialize [g neg s]
     (vec (specialize-with #(assoc g % (get s %)) g neg s)))
-  (-init [tmpl]
+  (proto/-init [tmpl]
     (let [d (count tmpl)]
       {:S [(vec (repeat d ?S))]
        :G [(vec (repeat d ?G))]
        :arity d})))
 
-(defn- more-general? [patt data]
-  (util/pairwise-every? #(or (= %1 %2) (= %1 ?G)) patt data))
+(defn- covers-elem? [h e]
+  (or (= h e) (= h ?G)))
+
+(defn- covers? [patt data]
+  (util/pairwise-every? covers-elem? patt data))
+
+(declare collapsed? converged?)
+
+(defn- positive [{:keys [S G arity]} example]
+  (let [g' (filter #(covers? %1 example) G)]
+    {:G g'
+     
+     :S (let [s' (map (fn [s]
+                        (if (not (covers? s example))
+                          (proto/-generalize s example)
+                          s))
+                      S)]
+          (if (converged? g' s')
+            s'
+            (filter
+             (fn [s] (not-any? #(covers? s %1) G))
+             s')))
+
+     :arity arity}))
+
+(defn- negative [{:keys [S G arity]} example]
+  {:G (reduce (fn [acc g]
+                (if (not (covers? g example))
+                  (conj acc g)
+                  (into acc
+                        (reduce (fn [acc g']
+                                  (if (and (not (covers? g' example))
+                                           (every? #(covers? g' %) S)
+                                           (not-any? #(and (not= g %) (covers? % g')) G))
+                                    (conj acc g')
+                                    acc))
+                                  []
+                                  (proto/-specialize g example (first S))))))
+              []
+              G)
+
+   :S (filter #(not (covers? %1 example)) S)
+
+   :arity arity})
+
+(defn arity
+  "Returns a vector template for arity n."
+  [n]
+  (vec (repeat n ??)))
 
 (defn collapsed?
   "Returns if a version space vs or a most-general hypothesis g and a
@@ -68,48 +112,6 @@
   ([g s]
    (and (= 1 (bounded-count 2 g) (bounded-count 2 s)) (= g s))))
 
-(defn- positive [{:keys [S G arity]} example]
-  (let [g' (filter #(more-general? %1 example) G)]
-    {:G g'
-     
-     :S (let [s' (map (fn [s]
-                        (if (not (more-general? s example))
-                          (-generalize s example)
-                          s))
-                      S)]
-          (if (converged? g' s')
-            s'
-            (filter
-             (fn [s] (not-any? #(more-general? s %1) G))
-             s')))
-
-     :arity arity}))
-
-(defn- negative [{:keys [S G arity]} example]
-  {:G (reduce (fn [acc g]
-                (if (not (more-general? g example))
-                  (conj acc g)
-                  (into acc
-                        (reduce (fn [acc g']
-                                  (if (and (not (more-general? g' example))
-                                           (every? #(more-general? g' %) S)
-                                           (not-any? #(and (not= g %) (more-general? % g')) G))
-                                    (conj acc g')
-                                    acc))
-                                  []
-                                  (-specialize g example (first S))))))
-              []
-              G)
-
-   :S (filter #(not (more-general? %1 example)) S)
-
-   :arity arity})
-
-(defn arity
-  "Returns a vector template for arity n."
-  [n]
-  (vec (repeat n '?)))
-
 (defn refine
   "Given a version space vs and an example, returns a new version space
   with hypotheses adjusted according to the given example's elements and
@@ -123,3 +125,86 @@
    (if positive?
      (positive vs example)
      (negative vs example))))
+
+(defn consistent?
+  "Returns true if all hypotheses in the version space are consistent with the labeled example."
+  [vs example label]
+  (letfn [(hyp-consistent? [h]
+            (let [matches? (covers? h example)]
+              (if label
+                matches?
+                (not matches?))))]
+    (and
+      (every? hyp-consistent? (:S vs))
+      (every? hyp-consistent? (:G vs)))))
+
+(defn applicable?
+  "Returns true if the version space can accommodate this example (i.e., at least one hypothesis is consistent)."
+  [vs example label]
+  (letfn [(hyp-consistent? [h]
+            (let [matches? (covers? h example)]
+              (if label
+                matches?
+                (not matches?))))]
+    (boolean
+     (or
+      (some hyp-consistent? (:S vs))
+      (some hyp-consistent? (:G vs))))))
+
+(comment
+
+  (def vs
+    {:S [['Small 'Red 'Soft]]
+     :G [[?G ?G ?G]]})
+
+  (applicable? vs ['Small 'Red 'Soft] true)
+  (consistent? vs ['Small 'Red 'Soft] true)  
+  ;; => true x2
+
+  (applicable? vs ['Large 'Blue 'Hard] false)
+  (consistent? vs ['Large 'Blue 'Hard] false)
+  ;; => true, false
+
+  (applicable? vs ['Small 'Red 'Soft] false)
+  (consistent? vs ['Small 'Red 'Soft] false)
+  ;; => false x2
+
+)
+
+(defn classify
+  "Attempts to classify an example using the current version space.
+   Returns :positive, :negative, or :unknown if G and S disagree."
+  [vs example]
+  (let [s-covers? (boolean (some #(covers? % example) (:S vs)))
+        g-covers? (every? #(covers? % example) (:G vs))]
+
+    (cond
+      ;; All general hypotheses cover AND at least one specific hypothesis agrees
+      (and g-covers? s-covers?) :positive
+
+      ;; None of the specific hypotheses agree AND no general hypothesis does either
+      (and (not s-covers?) (not (some #(covers? % example) (:G vs)))) :negative
+
+      ;; Otherwise ambiguous
+      :else :unknown)))
+
+(comment
+
+  (def vs
+  {:S [['Small 'Red 'Soft]]
+   :G [[?G 'Red ?G]]})
+
+  (covers? [?? 'Red ??] '[Small Red Soft])
+  (covers? '[Small Red Soft] '[Small Red Soft])
+  
+
+(classify vs ['Small 'Red 'Soft])
+;; => :positive
+
+(classify vs ['Large 'Blue 'Hard])
+;; => :negative
+
+(classify vs ['Large 'Red 'Hard])
+;; => :unknown  ;; G covers, S rejects
+
+)
