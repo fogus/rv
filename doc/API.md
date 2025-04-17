@@ -15,7 +15,7 @@ Provides an implementation of McCarthy's [`amb`](#fogus.rv.amb/amb) operator wit
 (accept condition ret)
 ```
 Function.
-<p><sub><a href="/blob/main/src/fogus/rv/amb.clj#L14-L18">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/amb.clj#L14-L18">Source</a></sub></p>
 
 ## <a name="fogus.rv.amb/amb">`amb`</a><a name="fogus.rv.amb/amb"></a>
 ``` clojure
@@ -44,7 +44,7 @@ A macro that provides a non-deterministic way to traverse a space
 
    A call to `(amb)` (i.e. without bindings and body) will exhaust
    immediately and thus result in `nil` as its value.
-<p><sub><a href="/blob/main/src/fogus/rv/amb.clj#L20-L54">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/amb.clj#L20-L54">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.constraints">fogus.rv.constraints</a>
@@ -76,7 +76,7 @@ Accepts a map describing a constraint description containing the mappings:
   formula then an empty seq is the result.
 
   The ordering of the results of this function is not guaranteed to be stable.
-<p><sub><a href="/blob/main/src/fogus/rv/constraints.clj#L47-L66">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/constraints.clj#L47-L66">Source</a></sub></p>
 
 ## <a name="fogus.rv.constraints/satisfy1">`satisfy1`</a><a name="fogus.rv.constraints/satisfy1"></a>
 ``` clojure
@@ -95,7 +95,7 @@ Accepts a map describing a constraint description containing the mappings:
   then an empty map is the result.
 
   The first found result of this function is not guaranteed to be stable.
-<p><sub><a href="/blob/main/src/fogus/rv/constraints.clj#L32-L45">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/constraints.clj#L32-L45">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.core">fogus.rv.core</a>
@@ -125,52 +125,52 @@ Most functions in rv work off of one or more of the following root
 
 (->AnyT)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->AskT">`->AskT`</a><a name="fogus.rv.core/->AskT"></a>
 ``` clojure
 
 (->AskT)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->IgnoreT">`->IgnoreT`</a><a name="fogus.rv.core/->IgnoreT"></a>
 ``` clojure
 
 (->IgnoreT)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AnyT">`AnyT`</a><a name="fogus.rv.core/AnyT"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AskT">`AskT`</a><a name="fogus.rv.core/AskT"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/ID_KEY">`ID_KEY`</a><a name="fogus.rv.core/ID_KEY"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L62-L62">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L62-L62">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/IgnoreT">`IgnoreT`</a><a name="fogus.rv.core/IgnoreT"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/lv?">`lv?`</a><a name="fogus.rv.core/lv?"></a>
 ``` clojure
 
 (lv? %1)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L36-L36">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L36-L36">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/map->relation">`map->relation`</a><a name="fogus.rv.core/map->relation"></a>
 ``` clojure
@@ -189,7 +189,7 @@ Converts a map to a set of tuples for that map, applying a unique
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L75-L97">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L97">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/table->kb">`table->kb`</a><a name="fogus.rv.core/table->kb"></a>
 ``` clojure
@@ -207,7 +207,7 @@ Converts a Table into a KB, applying unique :kb/id to maps without a
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L99-L111">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L99-L111">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.datalog">fogus.rv.datalog</a>
@@ -269,7 +269,7 @@ Queries a knowledge base or a set of relations given a vector
   `relationship/father`. Rules describe synthetic relations derived
   from real relations in the data or other synthetic relations
   derived from previous rule applications.
-<p><sub><a href="/blob/main/src/fogus/rv/datalog.clj#L91-L146">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L91-L146">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/query->map">`query->map`</a><a name="fogus.rv.datalog/query->map"></a>
 ``` clojure
@@ -279,7 +279,7 @@ Queries a knowledge base or a set of relations given a vector
 
 Accepts the vector form of a Datalog query and outputs a map
   of the component sections as keyword->seq mappings.
-<p><sub><a href="/blob/main/src/fogus/rv/datalog.clj#L80-L89">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L80-L89">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.fuzzy.soundex">fogus.rv.fuzzy.soundex</a>
@@ -306,7 +306,7 @@ Soundex is an algorithm for creating indices for words based on their
 
   :numeric? -> true numerically encodes the entire word rather than using
   the default soundex letter prefix.
-<p><sub><a href="/blob/main/src/fogus/rv/fuzzy/soundex.clj#L46-L62">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/fuzzy/soundex.clj#L46-L62">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.impl.unification">fogus.rv.impl.unification</a>
@@ -323,7 +323,7 @@ Provides internal unification functions.
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/impl/unification.clj#L16-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/impl/unification.clj#L16-L16">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.learn">fogus.rv.learn</a>
@@ -339,7 +339,7 @@ Common learning-related functions and protocols.
 
 (-generalize lhs rhs)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L5-L5">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn.clj#L5-L5">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn/-init">`-init`</a><a name="fogus.rv.learn/-init"></a>
 ``` clojure
@@ -347,20 +347,20 @@ Common learning-related functions and protocols.
 (-init basis)
 (-init basis arity)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L7-L7">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn.clj#L7-L7">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn/-specialize">`-specialize`</a><a name="fogus.rv.learn/-specialize"></a>
 ``` clojure
 
 (-specialize lhs neg rhs)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L6-L6">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn.clj#L6-L6">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn/S&G">`S&G`</a><a name="fogus.rv.learn/S&G"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L4-L7">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn.clj#L4-L7">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.learn.vs">fogus.rv.learn.vs</a>
@@ -374,19 +374,19 @@ Common learning-related functions and protocols.
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L16-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L16-L16">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?G">`?G`</a><a name="fogus.rv.learn.vs/?G"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L15-L15">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L15-L15">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?S">`?S`</a><a name="fogus.rv.learn.vs/?S"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L14-L14">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L14-L14">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/applicable?">`applicable?`</a><a name="fogus.rv.learn.vs/applicable?"></a>
 ``` clojure
@@ -397,7 +397,7 @@ Common learning-related functions and protocols.
 
 Returns true if at least one hypothesis in the version space is consistent
   with the example.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L182-L191">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L182-L191">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/arity-vec">`arity-vec`</a><a name="fogus.rv.learn.vs/arity-vec"></a>
 ``` clojure
@@ -406,7 +406,7 @@ Returns true if at least one hypothesis in the version space is consistent
 ```
 
 Returns a vector template for arity n.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L90-L93">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L90-L93">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/classify">`classify`</a><a name="fogus.rv.learn.vs/classify"></a>
 ``` clojure
@@ -416,7 +416,7 @@ Returns a vector template for arity n.
 
 Attempts to classify an example using the current version space.
    Returns ::positive, ::negative, or :ambiguous if G and S disagree.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L193-L202">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L193-L202">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/collapsed?">`collapsed?`</a><a name="fogus.rv.learn.vs/collapsed?"></a>
 ``` clojure
@@ -429,7 +429,7 @@ Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have collapsed. That is, training has
   caused the hypotheses to become inconsistent, making further classification
   impossible.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L101-L108">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L101-L108">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/consistent?">`consistent?`</a><a name="fogus.rv.learn.vs/consistent?"></a>
 ``` clojure
@@ -440,7 +440,7 @@ Returns if a version space vs or a most-general hypothesis g and a
 
 Returns true if all hypotheses in the version space are consistent with
   the labeled example.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L172-L180">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L172-L180">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/converged?">`converged?`</a><a name="fogus.rv.learn.vs/converged?"></a>
 ``` clojure
@@ -452,7 +452,7 @@ Returns true if all hypotheses in the version space are consistent with
 Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have converged. That is, training has
   caused the hypotheses to ground to a single legal case.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L110-L116">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L110-L116">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/covers?">`covers?`</a><a name="fogus.rv.learn.vs/covers?"></a>
 ``` clojure
@@ -462,7 +462,7 @@ Returns if a version space vs or a most-general hypothesis g and a
 
 Takes a hypothesis from a version space and returns if the example is
   consistent with it.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L95-L99">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L95-L99">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/refine">`refine`</a><a name="fogus.rv.learn.vs/refine"></a>
 ``` clojure
@@ -477,7 +477,7 @@ Given a version space vs and an example, returns a new version space
   :positive? -> boolean or by passing a boolean as the last argument. The
   explicit classification argument will always dominate the metadata
   classification.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L158-L170">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L158-L170">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.productions">fogus.rv.productions</a>
@@ -494,7 +494,7 @@ The simplest possible production rules system that uses a set
 
 (apply-production production facts context)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L87-L90">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L87-L90">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/cycle">`cycle`</a><a name="fogus.rv.productions/cycle"></a>
 ``` clojure
@@ -505,7 +505,7 @@ The simplest possible production rules system that uses a set
 Feeds the results of states into a function qf that is responsible for 
    detecting when production firings have stopped and returns an augmented
    fact set.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L110-L115">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L110-L115">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/naive-qf">`naive-qf`</a><a name="fogus.rv.productions/naive-qf"></a>
 ``` clojure
@@ -515,7 +515,7 @@ Feeds the results of states into a function qf that is responsible for
 
 Takes the last environment in a long sequence of states in the hope that 
    the sequence was long enough that all of the productions fired in creating it.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L119-L123">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L119-L123">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/select-production">`select-production`</a><a name="fogus.rv.productions/select-production"></a>
 ``` clojure
@@ -525,7 +525,7 @@ Takes the last environment in a long sequence of states in the hope that
 
 Builds a sequence of bindings paired with each production and then uses a selection 
    function to execute one of the productions that matched.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L74-L82">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L74-L82">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/states">`states`</a><a name="fogus.rv.productions/states"></a>
 ``` clojure
@@ -535,7 +535,7 @@ Builds a sequence of bindings paired with each production and then uses a select
 
 Will apply the result of one production firing to the fact base and feed 
    the result forward into the next firing.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L103-L108">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L103-L108">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/step">`step`</a><a name="fogus.rv.productions/step"></a>
 ``` clojure
@@ -545,7 +545,7 @@ Will apply the result of one production firing to the fact base and feed
 ```
 
 Takes a set of productions and facts and returns a new fact base based on the application of single production.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L94-L99">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L94-L99">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/unifications">`unifications`</a><a name="fogus.rv.productions/unifications"></a>
 ``` clojure
@@ -557,7 +557,7 @@ Walks through all of the clauses in an implied antecedent and matches
    each against every fact provided.  Returns a seq of contexts representing
    all of the bindings established by the antecedent unifications across all
    facts provided.
-<p><sub><a href="/blob/main/src/fogus/rv/productions.clj#L61-L70">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L61-L70">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.search">fogus.rv.search</a>
@@ -574,7 +574,7 @@ Common search-related functions and protocols.
 
 
 Functions related to graph-search algorithms.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L4-L11">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L4-L11">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/HeuristicSearch">`HeuristicSearch`</a><a name="fogus.rv.search/HeuristicSearch"></a>
 
@@ -582,7 +582,7 @@ Functions related to graph-search algorithms.
 
 
 Function(s) related to heuristic-guided search.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L13-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L13-L16">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/add-route">`add-route`</a><a name="fogus.rv.search/add-route"></a>
 ``` clojure
@@ -592,7 +592,7 @@ Function(s) related to heuristic-guided search.
 
 Adds a route to a `node` as a seq of nodes. Implementors of this function
     should return an instance of the object implementing this protocol.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L8-L10">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L8-L10">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/cost-of">`cost-of`</a><a name="fogus.rv.search/cost-of"></a>
 ``` clojure
@@ -601,7 +601,7 @@ Adds a route to a `node` as a seq of nodes. Implementors of this function
 ```
 
 Returns the cost to visit `node`.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L6-L6">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L6-L6">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/estimate-cost">`estimate-cost`</a><a name="fogus.rv.search/estimate-cost"></a>
 ``` clojure
@@ -610,7 +610,7 @@ Returns the cost to visit `node`.
 ```
 
 Returns an estimated cost of the route from `node` to `goal`.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L15-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L15-L16">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/neighbors-of">`neighbors-of`</a><a name="fogus.rv.search/neighbors-of"></a>
 ``` clojure
@@ -619,7 +619,7 @@ Returns an estimated cost of the route from `node` to `goal`.
 ```
 
 Returns a seq of neighbors of the given `node`.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L7-L7">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L7-L7">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/route-of">`route-of`</a><a name="fogus.rv.search/route-of"></a>
 ``` clojure
@@ -628,7 +628,7 @@ Returns a seq of neighbors of the given `node`.
 ```
 
 Given a `node`, returns the route associated with it.
-<p><sub><a href="/blob/main/src/fogus/rv/search.clj#L11-L11">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L11-L11">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.search.graph">fogus.rv.search.graph</a>
@@ -654,7 +654,7 @@ Implements a lazy A* best-first graph traversal algorithm. Takes a
   guarantees to return the lowest cost path as long as one exists.
   In the event that there is no path to the `goal-node` the current result
   is undefined.
-<p><sub><a href="/blob/main/src/fogus/rv/search/graph.clj#L18-L53">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search/graph.clj#L18-L53">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.util">fogus.rv.util</a>
@@ -669,32 +669,32 @@ Implements a lazy A* best-first graph traversal algorithm. Takes a
 
 (cart colls)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/util.clj#L15-L20">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/util.clj#L15-L20">Source</a></sub></p>
 
 ## <a name="fogus.rv.util/f-by">`f-by`</a><a name="fogus.rv.util/f-by"></a>
 ``` clojure
 
 (f-by f key coll)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/util.clj#L22-L25">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/util.clj#L22-L25">Source</a></sub></p>
 
 ## <a name="fogus.rv.util/pairwise-every?">`pairwise-every?`</a><a name="fogus.rv.util/pairwise-every?"></a>
 ``` clojure
 
 (pairwise-every? pred xs ys)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/util.clj#L27-L28">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/util.clj#L27-L28">Source</a></sub></p>
 
 ## <a name="fogus.rv.util/positions-of">`positions-of`</a><a name="fogus.rv.util/positions-of"></a>
 ``` clojure
 
 (positions-of pred & xs)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/util.clj#L30-L31">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/util.clj#L30-L31">Source</a></sub></p>
 
 ## <a name="fogus.rv.util/process-bindings">`process-bindings`</a><a name="fogus.rv.util/process-bindings"></a>
 ``` clojure
 
 (process-bindings bindings)
 ```
-<p><sub><a href="/blob/main/src/fogus/rv/util.clj#L11-L13">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/util.clj#L11-L13">Source</a></sub></p>

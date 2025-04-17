@@ -36,7 +36,7 @@ Namespaces under the wip sub-ns are works in progress and should only be used fo
 
 To generate the current API docs run the following:
 
-    clj -Tquickdoc quickdoc '{:outfile "doc/API.md", :github/rep "https://github.com/fogus/rv", :toc false}'
+    clj -Tquickdoc quickdoc '{:outfile "doc/API.md", :github/repo "https://github.com/fogus/rv", :toc false}'
 
 The above requires that you install quickdocs as a CLI tool first.
 
