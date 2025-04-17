@@ -22,14 +22,14 @@
   (is (= [[:small * *] [* * :laying]] (proto/-specialize [* * *] [:mid :blue :standing] [:small :blue :laying]))))
 
 (deftest collapsed-test
-  (is (vs/collapsed? (-> (proto/-init (vs/arity 2))
+  (is (vs/collapsed? (-> (proto/-init (vs/arity-vec 2))
                          (vs/refine '(1 2) true)
                          (vs/refine '(:a :b) true)
                          (vs/refine '("c" "d") false)
                          (vs/refine '([] [1]) false)))))
 
 (deftest s&g-tests
-  (let [{:keys [S G]} (-> (proto/-init (vs/arity 3))
+  (let [{:keys [S G]} (-> (proto/-init (vs/arity-vec 3))
                           (vs/refine [:vocal :jazz 50] true)
                           (vs/refine [:band :pop  70] false)
                           (vs/refine [:band :pop  80] false)
@@ -40,7 +40,7 @@
     (is (= [[:vocal * *]] G))
     (is (= [[:vocal :jazz *]] S)))
 
-  (let [{:keys [S G]} (-> (proto/-init (vs/arity 11))
+  (let [{:keys [S G]} (-> (proto/-init (vs/arity-vec 11))
                           (vs/refine '("rookie"  "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 19 "Mike") true)
                           (vs/refine '("veteran" "P"  "R" "MLB" "Active" "AL" "East" "Orioles" "Active" 23 "Jeff") true)
                           (vs/refine '("ace"     "LF" "L" "MLB" "Active" "NL" "West" "Giants"  "IL"     19 "Jamie") false))]
@@ -54,7 +54,7 @@
     (is (= S
            [[* "P" "R" "MLB" "Active" "AL" "East" "Orioles" "Active" * *]])))
 
-  (let [{:keys [S G]} (-> (proto/-init (vs/arity 6))
+  (let [{:keys [S G]} (-> (proto/-init (vs/arity-vec 6))
                           (vs/refine [:sunny :warm :normal :strong :warm :same] true)
                           (vs/refine [:sunny :warm :high   :strong :warm :same] true)
                           (vs/refine [:rainy :cold :high   :strong :warm :change] false)
@@ -63,37 +63,70 @@
     (is (= S [[:sunny :warm * :strong * *]]))))
 
 (deftest convergence-test
-  (let [{:keys [S G] :as V} (-> (proto/-init (vs/arity 5))
-                                (vs/refine [:japan "Honda"    :blue  1980 :economy] true))]
+  (let [example [:japan "Honda"    :blue  1980 :economy]
+        {:keys [S G] :as V} (-> (proto/-init (vs/arity-vec 5))
+                                (vs/refine example true))]
     (testing "CONVERGENCE TEST STEP 1"
       (is (= G [[* * * * *]]))
       (is (= S [[:japan "Honda" :blue 1980 :economy]]))
-      (is (not (vs/converged? V))))
+      (is (not (vs/converged? V)))
+      (is (= :fogus.rv.learn.vs/positive (vs/classify V example))))
 
     (testing "CONVERGENCE TEST STEP 2"
-      (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Toyota"   :green 1970 :sports] false))]
+      (let [example [:japan "Toyota"   :green 1970 :sports]
+            {:keys [S G] :as V} (-> V (vs/refine example false))]
         (is (= G [[* "Honda" * * *]
                   [* * :blue * *]
                   [* * * 1980 *]
                   [* * * * :economy]]))
         (is (= S [[:japan "Honda" :blue 1980 :economy]]))
         (is (not (vs/converged? V)))
+        (is (= :fogus.rv.learn.vs/negative (vs/classify V example)))
 
         (testing "CONVERGENCE TEST STEP 3"
-          (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Toyota"   :blue  1990 :economy] true))]
+          (let [example [:japan "Toyota"   :blue  1990 :economy]
+                {:keys [S G] :as V} (-> V (vs/refine example true))]
             (is (= G [[* * :blue * *]
                       [* * * * :economy]]))
             (is (= S [[:japan * :blue * :economy]]))
             (is (not (vs/converged? V)))
+            (is (= :fogus.rv.learn.vs/positive (vs/classify V example)))
 
             (testing "CONVERGENCE TEST STEP 4"
-              (let [{:keys [S G] :as V} (-> V (vs/refine [:usa   "Chrysler" :red   1980 :economy] false))]
+              (let [example [:usa   "Chrysler" :red   1980 :economy]
+                    {:keys [S G] :as V} (-> V (vs/refine example false))]
                 (is (= G [[* * :blue * *]
                           [:japan * * * :economy]]))
                 (is (= S [[:japan * :blue * :economy]]))
                 (is (not (vs/converged? V)))
+                (is (= :fogus.rv.learn.vs/negative (vs/classify V example)))
 
                 (testing "CONVERGENCE TEST STEP 5 - LAST"
-                  (let [{:keys [S G] :as V} (-> V (vs/refine [:japan "Honda"    :white 1980 :economy] true))]
-                    (is (vs/converged? V))))))))))))
+                  (let [example [:japan "Honda"    :white 1980 :economy]]
+                    (is (vs/applicable? V example true))
+                    (let [{:keys [S G] :as V} (-> V (vs/refine example true))]
+                      (is (= :fogus.rv.learn.vs/positive (vs/classify V example)))
+                      (is (vs/converged? V)))))))))))))
 
+(deftest applicable?-test
+    (let [vs {:S '[[Small Red Soft]]
+              :G [[* * *]]}]
+      (is (vs/applicable? vs ['Small 'Red 'Soft] true))
+      (is (not (vs/applicable? vs ['Large 'Blue 'Hard] false)))
+      (is (not (vs/applicable? vs ['Small 'Red 'Soft] false)))))
+
+(deftest consistent?-test
+    (let [vs {:S '[[Small Red Soft]]
+              :G [[* * *]]}]
+      (is (vs/consistent? vs ['Small 'Red 'Soft] true))  
+      (is (not (vs/consistent? vs ['Large 'Blue 'Hard] false)))
+      (is (not (vs/consistent? vs ['Small 'Red 'Soft] false)))))
+
+(deftest classify-test
+  (let [vs {:S [['Small 'Red 'Soft]]
+            :G [[* 'Red *]]}]
+    (is (= :fogus.rv.learn.vs/positive (vs/classify vs '[Small Red Soft])))
+    (is (= :fogus.rv.learn.vs/negative (vs/classify vs '[Large Blue Hard])))
+    (is (= :fogus.rv.learn.vs/ambiguous  (vs/classify vs '[Large Red Hard])))
+    (is true?  (vs/covers? (:G vs) '[Large Red Hard]))
+    (is false? (vs/covers? (:S vs) '[Large Red Hard]))))

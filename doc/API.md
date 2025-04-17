@@ -397,10 +397,10 @@ Common learning-related functions and protocols.
 Returns true if the version space can accommodate this example (i.e., at least one hypothesis is consistent).
 <p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L141-L152">Source</a></sub></p>
 
-## <a name="fogus.rv.learn.vs/arity">`arity`</a><a name="fogus.rv.learn.vs/arity"></a>
+## <a name="fogus.rv.learn.vs/arity-vec">`arity-vec`</a><a name="fogus.rv.learn.vs/arity-vec"></a>
 ``` clojure
 
-(arity n)
+(arity-vec n)
 ```
 
 Returns a vector template for arity n.
