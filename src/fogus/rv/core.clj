@@ -45,6 +45,11 @@
   (toString [_] "*")
   (equals [_ o] (instance? AnyT o)))
 
+(deftype AskT []
+  Object
+  (toString [_] "?")
+  (equals [_ o] true))
+
 (defmethod print-method LVar [lvar ^Writer writer]
   (.write writer (str lvar)))
 

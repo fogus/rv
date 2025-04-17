@@ -127,6 +127,13 @@ Most functions in rv work off of one or more of the following root
 ```
 <p><sub><a href="/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
 
+## <a name="fogus.rv.core/->AskT">`->AskT`</a><a name="fogus.rv.core/->AskT"></a>
+``` clojure
+
+(->AskT)
+```
+<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+
 ## <a name="fogus.rv.core/->IgnoreT">`->IgnoreT`</a><a name="fogus.rv.core/->IgnoreT"></a>
 ``` clojure
 
@@ -140,11 +147,17 @@ Most functions in rv work off of one or more of the following root
 
 <p><sub><a href="/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
 
+## <a name="fogus.rv.core/AskT">`AskT`</a><a name="fogus.rv.core/AskT"></a>
+
+
+
+<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+
 ## <a name="fogus.rv.core/ID_KEY">`ID_KEY`</a><a name="fogus.rv.core/ID_KEY"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L57-L57">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L62-L62">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/IgnoreT">`IgnoreT`</a><a name="fogus.rv.core/IgnoreT"></a>
 
@@ -176,7 +189,7 @@ Converts a map to a set of tuples for that map, applying a unique
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L70-L92">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L75-L97">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/table->kb">`table->kb`</a><a name="fogus.rv.core/table->kb"></a>
 ``` clojure
@@ -194,7 +207,7 @@ Converts a Table into a KB, applying unique :kb/id to maps without a
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L94-L106">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/core.clj#L99-L111">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.datalog">fogus.rv.datalog</a>
@@ -313,6 +326,43 @@ Provides internal unification functions.
 <p><sub><a href="/blob/main/src/fogus/rv/impl/unification.clj#L16-L16">Source</a></sub></p>
 
 -----
+# <a name="fogus.rv.learn">fogus.rv.learn</a>
+
+
+Common learning-related functions and protocols.
+
+
+
+
+## <a name="fogus.rv.learn/-generalize">`-generalize`</a><a name="fogus.rv.learn/-generalize"></a>
+``` clojure
+
+(-generalize lhs rhs)
+```
+<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L5-L5">Source</a></sub></p>
+
+## <a name="fogus.rv.learn/-init">`-init`</a><a name="fogus.rv.learn/-init"></a>
+``` clojure
+
+(-init basis)
+(-init basis arity)
+```
+<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L7-L7">Source</a></sub></p>
+
+## <a name="fogus.rv.learn/-specialize">`-specialize`</a><a name="fogus.rv.learn/-specialize"></a>
+``` clojure
+
+(-specialize lhs neg rhs)
+```
+<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L6-L6">Source</a></sub></p>
+
+## <a name="fogus.rv.learn/S&G">`S&G`</a><a name="fogus.rv.learn/S&G"></a>
+
+
+
+<p><sub><a href="/blob/main/src/fogus/rv/learn.clj#L4-L7">Source</a></sub></p>
+
+-----
 # <a name="fogus.rv.learn.vs">fogus.rv.learn.vs</a>
 
 
@@ -320,54 +370,53 @@ Provides internal unification functions.
 
 
 
-## <a name="fogus.rv.learn.vs/-generalize">`-generalize`</a><a name="fogus.rv.learn.vs/-generalize"></a>
-``` clojure
+## <a name="fogus.rv.learn.vs/??">`??`</a><a name="fogus.rv.learn.vs/??"></a>
 
-(-generalize lhs rhs)
-```
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L17-L17">Source</a></sub></p>
 
-## <a name="fogus.rv.learn.vs/-init">`-init`</a><a name="fogus.rv.learn.vs/-init"></a>
-``` clojure
 
-(-init basis)
-(-init basis arity)
-```
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L19-L19">Source</a></sub></p>
-
-## <a name="fogus.rv.learn.vs/-specialize">`-specialize`</a><a name="fogus.rv.learn.vs/-specialize"></a>
-``` clojure
-
-(-specialize lhs neg rhs)
-```
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L18-L18">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L16-L16">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?G">`?G`</a><a name="fogus.rv.learn.vs/?G"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L14-L14">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L15-L15">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?S">`?S`</a><a name="fogus.rv.learn.vs/?S"></a>
 
 
 
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L13-L13">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L14-L14">Source</a></sub></p>
 
-## <a name="fogus.rv.learn.vs/S&G">`S&G`</a><a name="fogus.rv.learn.vs/S&G"></a>
-
-
-
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L16-L19">Source</a></sub></p>
-
-## <a name="fogus.rv.learn.vs/arity">`arity`</a><a name="fogus.rv.learn.vs/arity"></a>
+## <a name="fogus.rv.learn.vs/applicable?">`applicable?`</a><a name="fogus.rv.learn.vs/applicable?"></a>
 ``` clojure
 
-(arity n)
+(applicable? vs example)
+(applicable? vs example positive?)
+```
+
+Returns true if at least one hypothesis in the version space is consistent
+  with the example.
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L182-L191">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/arity-vec">`arity-vec`</a><a name="fogus.rv.learn.vs/arity-vec"></a>
+``` clojure
+
+(arity-vec n)
 ```
 
 Returns a vector template for arity n.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L108-L111">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L90-L93">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/classify">`classify`</a><a name="fogus.rv.learn.vs/classify"></a>
+``` clojure
+
+(classify vs example)
+```
+
+Attempts to classify an example using the current version space.
+   Returns ::positive, ::negative, or :ambiguous if G and S disagree.
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L193-L202">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/collapsed?">`collapsed?`</a><a name="fogus.rv.learn.vs/collapsed?"></a>
 ``` clojure
@@ -380,7 +429,18 @@ Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have collapsed. That is, training has
   caused the hypotheses to become inconsistent, making further classification
   impossible.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L54-L61">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L101-L108">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/consistent?">`consistent?`</a><a name="fogus.rv.learn.vs/consistent?"></a>
+``` clojure
+
+(consistent? vs example)
+(consistent? vs example positive?)
+```
+
+Returns true if all hypotheses in the version space are consistent with
+  the labeled example.
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L172-L180">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/converged?">`converged?`</a><a name="fogus.rv.learn.vs/converged?"></a>
 ``` clojure
@@ -392,7 +452,17 @@ Returns if a version space vs or a most-general hypothesis g and a
 Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have converged. That is, training has
   caused the hypotheses to ground to a single legal case.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L63-L69">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L110-L116">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/covers?">`covers?`</a><a name="fogus.rv.learn.vs/covers?"></a>
+``` clojure
+
+(covers? hypothesis example)
+```
+
+Takes a hypothesis from a version space and returns if the example is
+  consistent with it.
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L95-L99">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/refine">`refine`</a><a name="fogus.rv.learn.vs/refine"></a>
 ``` clojure
@@ -407,7 +477,7 @@ Given a version space vs and an example, returns a new version space
   :positive? -> boolean or by passing a boolean as the last argument. The
   explicit classification argument will always dominate the metadata
   classification.
-<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L113-L125">Source</a></sub></p>
+<p><sub><a href="/blob/main/src/fogus/rv/learn/vs.clj#L158-L170">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.productions">fogus.rv.productions</a>
