@@ -7,6 +7,19 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns fogus.rv.learn.vs
+  "Version spaces are a binary classification, empirical learning algorithm.
+  The approach, as described in 'Version spaces: a candidate elimination approach
+  to rule learning' by Tom Mitchel (1977) takes training examples (currently
+  Tuples of a like-arity) and manages a 'version space'. A version space is a
+  map containing two 'hypotheses' :S and :G. The :G hypothesis corresponds to the
+  most general versions of the training data that are consistent with them and :S
+  is the most specific versions. When a version space is presented with a new
+  example it runs a 'candidate elimination' algorithm to modify the hypotheses :S
+  and :G accordingly. Examples can be marked as being 'positive' examples, meaning
+  that they are preferred instances. Anything not marked as 'positive' are taken as
+  negative examples. Once trained, a version space can be used to classify new
+  examples as 'positive' or 'negative'. If new examples are not covered by the
+  existing hypotheses then they are classified as 'ambiguous' instead."
   (:require [fogus.rv.core :as core]
             [fogus.rv.learn :as proto]
             [fogus.rv.util :as util]))
