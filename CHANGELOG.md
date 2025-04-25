@@ -4,7 +4,7 @@
 - Added (fogus.rv.util/positions-of [pred & xs]) function that returns the indices
   of values that match a predicate in any number of collections.
 - Added fogus.rv.learn.vs containing an implementation of version space learning
-using a candidate-elimination algorithm.
+  using an inductive candidate-elimination algorithm.
 - Added docs/API.md documentation.
 
 # v0.0.7
