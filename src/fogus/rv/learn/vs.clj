@@ -214,3 +214,61 @@
       (and (not at-least-one-s?) (not (some #(covers? % example) (:G vs)))) ::negative
       :otherwise ::ambiguous)))
 
+(defn similarity-score ;; TODO: improve
+  "Computes a similarity score as the ratio of positions in which
+   the hypothesis covers the example."
+  [hypothesis example]
+  (let [pairwise (map vector hypothesis example)
+        matches (count (filter #(covers-elem? (first %) (second %)) pairwise))
+        total (count pairwise)]
+    (if (zero? total)
+      0
+      (/ matches total))))
+
+(defn- explain-hypothesis
+  [hypothesis example]
+  (let [pairwise (map vector hypothesis example)
+        coverage (map #(covers-elem? (first %) (second %)) pairwise) ;; TODO: map takes many xs
+        mismatches (keep-indexed
+                     (fn [i [h e]]
+                       (when-not (covers-elem? h e)
+                         {:index i
+                          :hypothesis h}))
+                     pairwise)]
+    {:hypothesis hypothesis
+     :covers? (every? true? coverage)
+     :mismatches (vec mismatches)
+     :similarity (similarity-score hypothesis example)}))
+
+(defn- sort-similars [expl]
+  (vec (sort-by (comp - :similarity) expl)))
+
+(defn explain
+  "Returns an explanation of how each hypothesis evaluated the example,
+   including mismatches and similarity ranking."
+  [vs example]
+  {:explain/classification (classify vs example)
+   :explain/example example
+   :S/hypotheses (sort-similars (map #(explain-hypothesis % example) (:S vs)))
+   :G/hypotheses (sort-similars (map #(explain-hypothesis % example) (:G vs)))})
+
+(defn best-fit
+  ""
+  [vs example]
+  (let [explanation (explain vs example)
+        [best-s & _] (sort-similars (:S/hypotheses explanation))
+        [best-g & _] (sort-similars (:G/hypotheses explanation))]
+    (if (> (:similarity best-s) (:similarity best-g))
+      (with-meta best-s {::fit-from :S})
+      (with-meta best-g {::fit-from :G}))))
+
+(comment
+  (def vs
+    (-> (proto/-init (arity-vec 6))
+        (refine [:sunny :warm :normal :strong :warm :same] true)
+        (refine [:sunny :warm :high   :strong :warm :same] true)
+        (refine [:rainy :cold :high   :strong :warm :change] false)))
+
+  (explain vs [:sunny :warm :high   :strong :cool :change])
+  (best-fit vs [:sunny :warm :high   :strong :cool :change])
+)
