@@ -282,14 +282,3 @@
     (if (> (:similarity best-s) (:similarity best-g))
       (with-meta best-s {::fit-from :S})
       (with-meta best-g {::fit-from :G}))))
-
-(comment
-  (def vs
-    (-> (proto/-init (arity-vec 6))
-        (refine [:sunny :warm :normal :strong :warm :same] true)
-        (refine [:sunny :warm :high   :strong :warm :same] true)
-        (refine [:rainy :cold :high   :strong :warm :change] false)))
-
-  (explain vs [:sunny :warm :high   :strong :cool :change])
-  (best-fit vs [:sunny :warm :high   :strong :cool :change])
-)

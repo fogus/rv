@@ -130,3 +130,16 @@
     (is (= :fogus.rv.learn.vs/ambiguous  (vs/classify vs '[Large Red Hard])))
     (is true?  (vs/covers? (:G vs) '[Large Red Hard]))
     (is false? (vs/covers? (:S vs) '[Large Red Hard]))))
+
+(deftest explain-test
+  (let [vs (-> (proto/-init (vs/arity-vec 6))
+               (vs/refine [:sunny :warm :normal :strong :warm :same] true)
+               (vs/refine [:sunny :warm :high   :strong :warm :same] true)
+               (vs/refine [:rainy :cold :high   :strong :warm :change] false))
+        example [:sunny :warm :high :strong :cool :change]]
+    (testing "explain"
+      (let [res (vs/explain vs example)]
+        (is (= :fogus.rv.learn.vs/ambiguous (:explain/classification res)))
+        (is (= [2/3] (map :similarity (:explain/S res))))
+        (is (= [1 1 5/6] (map :similarity (:explain/G res))))))
+    (is (= 1 (:similarity (vs/best-fit vs example))))))
