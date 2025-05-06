@@ -366,6 +366,19 @@ Common learning-related functions and protocols.
 # <a name="fogus.rv.learn.vs">fogus.rv.learn.vs</a>
 
 
+Version spaces are a binary classification, empirical learning algorithm.
+  The approach, as described in 'Version spaces: a candidate elimination approach
+  to rule learning' by Tom Mitchel (1977) takes training examples (currently
+  Tuples of a like-arity) and manages a 'version space'. A version space is a
+  map containing two 'hypotheses' :S and :G. The :G hypothesis corresponds to the
+  most general versions of the training data that are consistent with them and :S
+  is the most specific versions. When a version space is presented with a new
+  example it runs a 'candidate elimination' algorithm to modify the hypotheses :S
+  and :G accordingly. Examples can be marked as being 'positive' examples, meaning
+  that they are preferred instances. Anything not marked as 'positive' are taken as
+  negative examples. Once trained, a version space can be used to classify new
+  examples as 'positive' or 'negative'. If new examples are not covered by the
+  existing hypotheses then they are classified as 'ambiguous' instead.
 
 
 
@@ -374,19 +387,19 @@ Common learning-related functions and protocols.
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L16-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L29-L29">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?G">`?G`</a><a name="fogus.rv.learn.vs/?G"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L15-L15">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L28-L28">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/?S">`?S`</a><a name="fogus.rv.learn.vs/?S"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L14-L14">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L27-L27">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/applicable?">`applicable?`</a><a name="fogus.rv.learn.vs/applicable?"></a>
 ``` clojure
@@ -397,7 +410,7 @@ Common learning-related functions and protocols.
 
 Returns true if at least one hypothesis in the version space is consistent
   with the example.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L182-L191">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L195-L204">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/arity-vec">`arity-vec`</a><a name="fogus.rv.learn.vs/arity-vec"></a>
 ``` clojure
@@ -406,7 +419,16 @@ Returns true if at least one hypothesis in the version space is consistent
 ```
 
 Returns a vector template for arity n.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L90-L93">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L103-L106">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/best-fit">`best-fit`</a><a name="fogus.rv.learn.vs/best-fit"></a>
+``` clojure
+
+(best-fit vs example)
+```
+
+Returns the best-fit hypothesis for an example.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L259-L267">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/classify">`classify`</a><a name="fogus.rv.learn.vs/classify"></a>
 ``` clojure
@@ -416,7 +438,7 @@ Returns a vector template for arity n.
 
 Attempts to classify an example using the current version space.
    Returns ::positive, ::negative, or :ambiguous if G and S disagree.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L193-L202">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L206-L215">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/collapsed?">`collapsed?`</a><a name="fogus.rv.learn.vs/collapsed?"></a>
 ``` clojure
@@ -429,7 +451,7 @@ Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have collapsed. That is, training has
   caused the hypotheses to become inconsistent, making further classification
   impossible.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L101-L108">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L114-L121">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/consistent?">`consistent?`</a><a name="fogus.rv.learn.vs/consistent?"></a>
 ``` clojure
@@ -440,7 +462,7 @@ Returns if a version space vs or a most-general hypothesis g and a
 
 Returns true if all hypotheses in the version space are consistent with
   the labeled example.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L172-L180">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L185-L193">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/converged?">`converged?`</a><a name="fogus.rv.learn.vs/converged?"></a>
 ``` clojure
@@ -452,7 +474,7 @@ Returns true if all hypotheses in the version space are consistent with
 Returns if a version space vs or a most-general hypothesis g and a
   most-specific hypothesis s have converged. That is, training has
   caused the hypotheses to ground to a single legal case.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L110-L116">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L123-L129">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/covers?">`covers?`</a><a name="fogus.rv.learn.vs/covers?"></a>
 ``` clojure
@@ -462,7 +484,20 @@ Returns if a version space vs or a most-general hypothesis g and a
 
 Takes a hypothesis from a version space and returns if the example is
   consistent with it.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L95-L99">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L108-L112">Source</a></sub></p>
+
+## <a name="fogus.rv.learn.vs/explain">`explain`</a><a name="fogus.rv.learn.vs/explain"></a>
+``` clojure
+
+(explain vs example)
+```
+
+Returns a structure explaining how the classifier reaches a conclusion,
+  given a version space vs and a compatible example.
+
+  each hypothesis covers example,
+   including mismatches and similarity ranking.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L247-L257">Source</a></sub></p>
 
 ## <a name="fogus.rv.learn.vs/refine">`refine`</a><a name="fogus.rv.learn.vs/refine"></a>
 ``` clojure
@@ -477,7 +512,7 @@ Given a version space vs and an example, returns a new version space
   :positive? -> boolean or by passing a boolean as the last argument. The
   explicit classification argument will always dominate the metadata
   classification.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L158-L170">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/learn/vs.clj#L171-L183">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.productions">fogus.rv.productions</a>
