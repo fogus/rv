@@ -214,7 +214,8 @@
       (and (not at-least-one-s?) (not (some #(covers? % example) (:G vs)))) ::negative
       :otherwise ::ambiguous)))
 
-(defn similarity-score ;; TODO: improve
+;; TODO: improve
+(defn- similarity-score
   "Computes a similarity score as the ratio of positions in which
    the hypothesis covers the example."
   [hypothesis example]
@@ -244,7 +245,10 @@
   (vec (sort-by (comp - :similarity) expl)))
 
 (defn explain
-  "Returns an explanation of how each hypothesis evaluated the example,
+  "Returns a structure explaining how the classifier reaches a conclusion,
+  given a version space vs and a compatible example.
+
+  each hypothesis covers example,
    including mismatches and similarity ranking."
   [vs example]
   {:explain/classification (classify vs example)
@@ -253,7 +257,7 @@
    :G/hypotheses (sort-similars (map #(explain-hypothesis % example) (:G vs)))})
 
 (defn best-fit
-  ""
+  "Returns the best-fit hypothesis for an example."
   [vs example]
   (let [explanation (explain vs example)
         [best-s & _] (sort-similars (:S/hypotheses explanation))
