@@ -1,3 +1,10 @@
+# v0.0.9
+- Added functions to enable human-in-the-loop learning to `fogus.rv.learn.vs` namespace
+  - `(explain [vs example])` returns a structure explaining how the classifier reaches a conclusion
+  - `(best-fit [vs example])` returns the best-fit hypothesis for an example 
+  - See [API.md](https://github.com/fogus/rv/blob/main/doc/API.md#fogusrvlearnvs) for details
+- Cleaned up the docstrings in the `fogus.rv.learn.vs`
+
 # v0.0.8
 - Added (fogus.rv.util/pairwise-every? [pred xs ys]) combinator to build Clojure
   style `*-every?` functions of two arguments.
