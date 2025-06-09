@@ -7,7 +7,7 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns fogus.rv.core
-  "Most functions in rv work off of one or more of the following root
+  "Most functions in rv work off of one or more of the following core
   concepts:
 
   - Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys
@@ -72,6 +72,30 @@
   [id k s]
   (for [v s] [id k v]))
 
+(defn- vector->tuples
+  [idfn eid k v]
+  (let [vid (idfn v)]
+    (cons []
+          (for [elem (rest v)]
+            []))))
+
+(comment
+  {:kb/id :primes
+   :num/primes [1 2 3 5 7]}
+
+  ;; becomes
+
+  [:primes :num/primes 100]
+  [100 :sequence/items 101]
+  [100 :sequence/indexed? true]
+  [101 :cell/head 1] [101 :cell/i 0] [101 :cell/tail 103]
+  [103 :cell/head 2] [103 :cell/i 1] [103 :cell/tail 105]
+  [105 :cell/head 3] [105 :cell/i 2] [105 :cell/tail 107]
+  [107 :cell/head 5] [107 :cell/i 3] [107 :cell/tail 109]
+  [109 :cell/head 7] [109 :cell/i 4]
+
+)
+
 (defn map->relation
   "Converts a map to a set of tuples for that map, applying a unique
   :kb/id if the map doesn't already have a value mapped for that key.
@@ -90,9 +114,8 @@
      (reduce (fn [acc [k v]]
                (if (= k ID_KEY)
                  acc
-                 (if (set? v)
-                   (concat acc (set->tuples id k v))
-                   (conj acc [id k v]))))
+                 (cond (set? v) (concat acc (set->tuples id k v))
+                       :default (conj acc [id k v]))))
              []
              (seq entity)))))
 
