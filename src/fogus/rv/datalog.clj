@@ -77,6 +77,9 @@
   [facts query rules]
   (-> facts (saturate rules) (match-rule #{} query) set))
 
+(def linked-list-rules '[([?h :cell/linked ?t] [?h :cell/head _] [?t :cell/head _] (= ?h ?t))
+                         ([?h :cell/linked ?t] [?h :cell/linked ?x] [?x :cell/tail ?t])])
+
 (defn query->map
   "Accepts the vector form of a Datalog query and outputs a map
   of the component sections as keyword->seq mappings."
@@ -187,5 +190,58 @@
                 [?id :response/to     ?pid]
                 [?pid :emergency/type ?problem]])
 
+  (def vkb #{[:primes :num/primes 100]
+             [100 :sequence/items 101]
+             [100 :sequence/indexed? true]
+             [101 :cell/head 1] [101 :cell/i 0] [101 :cell/tail 103]
+             [103 :cell/head 2] [103 :cell/i 1] [103 :cell/tail 105]
+             [105 :cell/head 3] [105 :cell/i 2] [105 :cell/tail 107]
+             [107 :cell/head 5] [107 :cell/i 3] [107 :cell/tail 109]
+             [109 :cell/head 7] [109 :cell/i 4]})
 
+  (def vrules  '[([?h :cell/linked ?t] [?h :cell/head _] [?h :cell/tail ?t])])
+  (def rvrules '[([?h :cell/linked ?t] [?h :cell/head _] [?t :cell/head _] (= ?h ?t))
+                 ([?h :cell/linked ?t] [?h :cell/linked ?x] [?x :cell/tail ?t])])
+
+  (q '[:find ?n
+       :where
+       [_ :cell/head ?n]]
+     vkb
+     ;;vrules
+     )
+
+  (q '[:find ?h2
+       :where
+       [?e :cell/head 1]
+       [?e :cell/linked ?t]
+       [?t :cell/head ?h2]]
+     vkb
+     vrules
+     )
+
+  (q '[:find ?h2
+       :where
+       [?e :cell/head 1]
+       [?e :cell/linked ?t]
+       [?t :cell/head ?h2]]
+     vkb
+     rvrules
+     )
+
+  (q '[:find ?s ?h
+       :where
+       [?s :sequence/items ?h]
+       [?h :cell/i 0]]
+     vkb
+     ;;vrules
+     )
+
+    (q '[:find ?s ?h
+       :where
+       [?s :sequence/items ?h]
+       [?h :cell/i 0]]
+     vkb
+     ;;vrules
+     )
+  
   )
