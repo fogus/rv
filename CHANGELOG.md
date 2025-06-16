@@ -1,3 +1,6 @@
+# v0.0.10
+- Added vector encoding for datalog tuples
+
 # v0.0.9
 - Added functions to enable human-in-the-loop learning to `fogus.rv.learn.vs` namespace
   - `(explain [vs example])` returns a structure explaining how the classifier reaches a conclusion

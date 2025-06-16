@@ -6,17 +6,17 @@ Explorations in pure reasoning algorithms with Clojure.
 
 ### deps.edn
 
-    me.fogus/rv {:mvn/version "0.0.9"}
+    me.fogus/rv {:mvn/version "0.0.10"}
 
 OR
 
-    io.github.fogus/rv {:git/tag "v0.0.9" :git/sha "..."}
+    io.github.fogus/rv {:git/tag "v0.0.10" :git/sha "..."}
 
 ### Leiningen
 
 Modify your [Leiningen](http://github.com/technomancy/leiningen) dependencies to include:
 
-    :dependencies [[me.fogus/rv "0.0.9"] ...]
+    :dependencies [[me.fogus/rv "0.0.10"] ...]
 
 ### Maven
 
@@ -25,7 +25,7 @@ Add the following to your `pom.xml` file:
     <dependency>
       <groupId>me.fogus</groupId>
       <artifactId>rv</artifactId>
-      <version>0.0.9</version>
+      <version>0.0.10</version>
     </dependency>
 
 ## Dev

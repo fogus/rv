@@ -101,7 +101,7 @@ Accepts a map describing a constraint description containing the mappings:
 # <a name="fogus.rv.core">fogus.rv.core</a>
 
 
-Most functions in rv work off of one or more of the following root
+Most functions in rv work off of one or more of the following core
   concepts:
 
   - Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys
@@ -189,7 +189,7 @@ Converts a map to a set of tuples for that map, applying a unique
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L97">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L118-L140">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/table->kb">`table->kb`</a><a name="fogus.rv.core/table->kb"></a>
 ``` clojure
@@ -207,7 +207,7 @@ Converts a Table into a KB, applying unique :kb/id to maps without a
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L99-L111">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L142-L154">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.datalog">fogus.rv.datalog</a>
@@ -217,6 +217,12 @@ A minimal implementation of Datalog.
 
 
 
+
+## <a name="fogus.rv.datalog/linked-list-rules">`linked-list-rules`</a><a name="fogus.rv.datalog/linked-list-rules"></a>
+
+
+
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L80-L81">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/q">`q`</a><a name="fogus.rv.datalog/q"></a>
 ``` clojure
@@ -269,7 +275,7 @@ Queries a knowledge base or a set of relations given a vector
   `relationship/father`. Rules describe synthetic relations derived
   from real relations in the data or other synthetic relations
   derived from previous rule applications.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L91-L146">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L94-L149">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/query->map">`query->map`</a><a name="fogus.rv.datalog/query->map"></a>
 ``` clojure
@@ -279,7 +285,7 @@ Queries a knowledge base or a set of relations given a vector
 
 Accepts the vector form of a Datalog query and outputs a map
   of the component sections as keyword->seq mappings.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L80-L89">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L83-L92">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.fuzzy.soundex">fogus.rv.fuzzy.soundex</a>
