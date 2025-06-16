@@ -199,24 +199,15 @@
              [107 :cell/head 5] [107 :cell/i 3] [107 :cell/tail 109]
              [109 :cell/head 7] [109 :cell/i 4]})
 
-  (def vrules  '[([?h :cell/linked ?t] [?h :cell/head _] [?h :cell/tail ?t])])
-  (def rvrules '[([?h :cell/linked ?t] [?h :cell/head _] [?t :cell/head _] (= ?h ?t))
-                 ([?h :cell/linked ?t] [?h :cell/linked ?x] [?x :cell/tail ?t])])
-
-  (q '[:find ?n
-       :where
-       [_ :cell/head ?n]]
-     vkb
-     ;;vrules
-     )
-
   (q '[:find ?h2
        :where
-       [?e :cell/head 1]
+       [:primes :num/primes ?primes]
+       [?primes :sequence/items ?e]
+       [?e :cell/head _]
        [?e :cell/linked ?t]
        [?t :cell/head ?h2]]
      vkb
-     vrules
+     linked-list-rules
      )
 
   (q '[:find ?h2
