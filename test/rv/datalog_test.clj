@@ -174,14 +174,27 @@
 
 (deftest test-datalog-vectors
   (testing "vector tuples"
-    (let [res (d/q '[:find ?h
-                     :where
-                     [:primes :num/primes ?primes]
-                     [?primes :sequence/items ?e]
-                     [?e :cell/head _]
-                     [?e :cell/linked ?t]
-                     [?t :cell/head ?h]]
-                   (core/table->kb #{{:kb/id :primes
-                                      :num/primes [2 3 5 7]}})
-                   d/linked-list-rules)]
-      (is (= #{[2] [3] [5] [7]} res)))))
+    (let [res1 (d/q '[:find ?val
+                      :where
+                      [:primes :num/primes ?primes]
+                      [?primes :sequence/items ?h]
+                      [?h :cell/head _]
+                      [?h :cell/linked ?t]
+                      [?t :cell/head ?val]]
+                    (core/table->kb #{{:kb/id :primes
+                                       :num/primes [2 3 5 7]}})
+                   d/linked-list-rules)
+
+          res2 (d/q '[:find ?i ?val
+                      :where
+                      [:primes :num/primes ?primes]
+                      [?primes :sequence/items ?h]
+                      [?h :cell/head _]
+                      [?h :cell/linked ?t]
+                      [?t :cell/head ?val]
+                      [?t :cell/i ?i]]
+                    (core/table->kb #{{:kb/id :primes
+                                       :num/primes [2 3 5 7]}})
+                    d/linked-list-rules)]
+      (is (= #{[2] [3] [5] [7]} res1))
+      (is (= [[0 2] [1 3] [2 5] [3 7]] (sort-by first res2))))))

@@ -98,7 +98,7 @@
 
 (comment
   (map->relation {:kb/id :primes
-                 :num/primes [1 2 3 5 7]})
+                  :num/primes [1 2 3 5 7]})
 
   (vector->tuples use-or-gen-id :primes :num/primes [1 2 3 5 7])
   
