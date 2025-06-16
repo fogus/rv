@@ -173,21 +173,34 @@
                                 table))))))
 
 (deftest test-datalog-linked-list
-  (let [vkb #{[:primes :num/primes 100]
-              [100 :sequence/items 101]
-              [100 :sequence/indexed? true]
-              [101 :cell/head 1] [101 :cell/i 0] [101 :cell/tail 103]
-              [103 :cell/head 2] [103 :cell/i 1] [103 :cell/tail 105]
-              [105 :cell/head 3] [105 :cell/i 2] [105 :cell/tail 107]
-              [107 :cell/head 5] [107 :cell/i 3] [107 :cell/tail 109]
-              [109 :cell/head 7] [109 :cell/i 4]}
-        res   (d/q '[:find ?h
+  (testing "fabricated tuples"
+    (let [vkb #{[:primes :num/primes 100]
+                [100 :sequence/items 101]
+                [100 :sequence/indexed? true]
+                [101 :cell/head 1] [101 :cell/i 0] [101 :cell/tail 103]
+                [103 :cell/head 2] [103 :cell/i 1] [103 :cell/tail 105]
+                [105 :cell/head 3] [105 :cell/i 2] [105 :cell/tail 107]
+                [107 :cell/head 5] [107 :cell/i 3] [107 :cell/tail 109]
+                [109 :cell/head 7] [109 :cell/i 4]}
+          res   (d/q '[:find ?h
+                       :where
+                       [:primes :num/primes ?primes]
+                       [?primes :sequence/items ?e]
+                       [?e :cell/head _]
+                       [?e :cell/linked ?t]
+                       [?t :cell/head ?h]]
+                     vkb
+                     d/linked-list-rules)]
+      (is (= #{[1] [2] [3] [5] [7]} res))))
+  (testing "built tuples"
+    (let [res (d/q '[:find ?h
                      :where
                      [:primes :num/primes ?primes]
                      [?primes :sequence/items ?e]
                      [?e :cell/head _]
                      [?e :cell/linked ?t]
                      [?t :cell/head ?h]]
-                   vkb
+                   (core/table->kb #{{:kb/id :primes
+                                      :num/primes [1 2 3 5 7]}})
                    d/linked-list-rules)]
-    (is (= #{[1] [2] [3] [5] [7]} res))))
+      (is (= #{[1] [2] [3] [5] [7]} res)))))

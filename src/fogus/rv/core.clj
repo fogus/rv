@@ -74,15 +74,34 @@
 
 (defn- vector->tuples
   [idfn eid k v]
-  (let [vid (idfn v)]
-    (cons []
-          (for [elem (rest v)]
-            []))))
+  (let [vid (idfn v)
+        sid (idfn v)
+        pre [[eid k vid]
+             [vid :sequence/items sid]
+             [vid :sequence/indexed? true]]]
+    (loop [elems v
+           i 0
+           cid sid
+           tuples pre]
+      (if (seq elems)
+        (let [head [cid :cell/head (first elems)]
+              index [cid :cell/i i]
+              tid (when (next elems)
+                    (idfn (inc i)))]
+          (recur (rest elems)
+                 (inc i)
+                 tid
+                 (into tuples (if tid
+                                [head index [cid :cell/tail tid]]
+                                [head index]))))
+        tuples))))
 
 (comment
-  {:kb/id :primes
-   :num/primes [1 2 3 5 7]}
+  (map->relation {:kb/id :primes
+                 :num/primes [1 2 3 5 7]})
 
+  (vector->tuples use-or-gen-id :primes :num/primes [1 2 3 5 7])
+  
   ;; becomes
 
   [:primes :num/primes 100]
@@ -115,6 +134,7 @@
                (if (= k ID_KEY)
                  acc
                  (cond (set? v) (concat acc (set->tuples id k v))
+                       (vector? v) (concat acc (vector->tuples idfn id k v))
                        :default (conj acc [id k v]))))
              []
              (seq entity)))))
