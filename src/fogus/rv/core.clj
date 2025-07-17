@@ -10,18 +10,56 @@
   "Most functions in rv work off of one or more of the following core
   concepts:
 
-  - Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys
-  - Table: a set of hashmaps or Entities
-  - Fact: a vector triple in the form [entity-id attribute value]
-  - Relation: a set of Facts pertaining to a particular Entity
-  - LVar: a logic variable that can bind to any value in its :range
-  - Ground: a concrete value
-  - Query: a set of Facts containing a mix of LVars and Grounds  
-  - Rules: a set of Facts describing synthetic relations
-  - Production: a pair of: antecedent query and consequent Facts
-  - KB: a set of Relations about many Entities and possibly containing Productions  
-  - Constraint Description: a set of LVars and a Formula describing the domain of their values
-  - Formula: a list describing a predicate expression of mixed LVars and clojure functions"
+  Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys.
+
+  {:kb/id       :person/john-doe
+   :person/name "John Doe"
+   :person/age  42}
+  
+  Table: a set of hashmaps or Entities. Tables represent unstructured or
+  semi-structured collections of data.
+
+  #{{:kb/id :city/blt :city/name "Baltimore"}
+    {:kb/id :city/atl  :city/name "Atlanta"}}
+
+  Fact: a vector triple in the form [entity-id attribute value] that describe that
+  a given entity has an attribute with a specific value. You can tie facts together
+  by referencing their :kb/ids.
+
+  [:person/john-doe :person/age 42]
+  [:city/blt :city/name \"Baltimore\"]
+
+  Relation: a set of Facts pertaining to a particular Entity. You can tie facts
+  together by referencing :kb/ids in value positions.
+
+  #{[:person/john-doe :person/age 42]
+    [:city/blt :city/name \"Baltimore\"]
+    [:person/john-doe :address/city :city/blt]}
+
+  LVar: a logic variable that can unify with any value in its :range
+
+  (map->LVar {:domain 'x :range (range 0 5)})
+
+  Ground: a concrete value, like a keyword, number, string, etc.
+
+  42, \"John Doe\", :city/blt
+
+  Query: a set of Facts containing a mix of LVars and Grounds used  to find
+  bindings for the LVars that satisfy a set of Facts.
+
+  Rules: a set of Facts describing derived or synthetic relations in terms of
+  existing ones.
+
+  Production: a map containing :antecedent -> query and :consequent -> Facts
+  to be asserted if the query fires.
+
+  KB: a set of Relations about many Entities and possibly containing Productions. It
+  represents all the knowledge currently known or derivable.
+
+  Constraint Description: a set of LVars and a Formula describing the domain
+  of their values.
+
+  Formula: a list describing a predicate expression of mixed LVars and clojure functions."
   (:import java.io.Writer))
 
 ;; Logic variables
