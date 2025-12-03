@@ -1,0 +1,117 @@
+* Thoughts
+** Potential inference & reasoning additions
+
+*** IDEA: Forward chaining inference
+
+Forward-chaining reasoner that complements the existing production rules system that would maintain a more explicit agenda and conflict resolution strategy. RETE-like?
+
+*** IDEA: Backward chaining query planner
+
+Goal-driven reasoning system that integrates with the existing datalog impl?
+
+*** IDEA: Truth maintenance system (TMS)
+
+Justification / assumption-based truth maintenance. Track dependencies between derived facts and supporting evidence, enabling belief revision when assumptions are retracted. Natural fit with the EAV tuple architecture.
+
+*** IDEA: Inductive logic programming
+
+Build on the version spaces implementation to learn logic rules from examples. Given positive/negative examples in EAV form, induce production rules or Datalog rules that explain the data.
+
+*** IDEA: Probabilistic reasoning with Bayesian networks
+
+Belief propagation over networks of dependencies. Nodes would be LVars with probability distributions. Could represent network structure in EAV tuples with edges as :bn/parent relations.
+
+*** IDEA: Analogical reasoning
+
+   Create structure mapping between knowledge bases. Given two KB domains, find analogous relations and transfer knowledge between them. Based on structure-mapping theory (L@@k Gentner).
+
+*** IDEA: Constraint propagation algorithms
+
+Current constraint solver with arc-consistency (AC-3), forward checking, and backjumping. Maybe integrate with the production system for constraint satisfaction problems.
+
+*** IDEA: Case-based reasoning (CBR)
+
+Store problem-solution pairs as entities in EAV. Implement retrieval by similarity (using search protos), adaptation of solutions to new problems, learning. Soundex could support fuzzy matching?
+
+*** IDEA: Explanation-based generalization (EBG)
+
+Given a specific problem solution and domain theory, extract general rules. Complements version spaces by using causal explanations rather than just empirical data. Datalog rules as the domain theory?
+
+*** IDEA: Temporal reasoning capabilities
+
+L@@k Allen's interval algebra or point-based temporal logic. Represent time intervals/points as entities with temporal relations. Query across time?
+
+*** IDEA: Abductive reasoning capability
+
+Hypothesis generation from observations. Given observations (EAV tuples) and a KB with causal rules, generate minimal explanations. Complements the deductive datalog and inductive version spaces.
+
+*** IDEA: Fuzzy logic reasoning
+
+Fuzzy set membership functions and fuzzy rule evaluation. Extend LVars to support fuzzy values (degree of membership). Fuzzy versions of datalog queries with approximate matching and aggregation operators.
+
+*** IDEA: Nonmonotonic reasoning
+
+Default logic or circumscription for reasoning with incomplete information. Add :default/rule attribute type to represent defeasible rules. Common-sense reasoning where conclusions can be retracted with new evidence?
+
+** Potential changes to what's here
+
+*** IDEA: Incremental query evaluation
+
+Materialized views of datalog queries that update efficiently when the KB changes. Could cache query results and use differential dataflow techniques to maintain them as facts are added/removed.
+
+*** IDEA: Create visual debugger for production rule firing
+
+Jess-like visualize rule conflict sets, and inspect bindings at each step.
+
+*** IDEA: Probabilistic version spaces
+
+Maintain probability distributions over hypotheses rather than just boundary sets. Enables softer classification and confidence estimates.
+
+** Research
+
+*** Explore connection between amb and version spaces
+   
+Both do search through possibility spaces. Could amb be used to implement version space learning? Or could version spaces guide amb exploration?
+
+*** Integration with spec for type constraints
+   
+Use clojure.spec to define domains for LVars, validate KB consistency, generate test data. Could constraint solver use spec predicates directly?
+
+** Documentation & Testing
+
+*** Property-based testing with test.check
+   
+Generate random KBs, queries, rules and verify algebraic properties hold.
+
+*** Document theoretical foundations
+   
+Explain the algorithms and ideas behind each module. Help users understand when to apply each technique and what guarantees they provide.
+
+** Integration ideas
+
+*** Version spaces + Datalog: concept learning with background knowledge
+
+Use Datalog rules as background theory to guide version space generalization. When generalizing, only consider generalizations that are consistent with domain rules.
+
+*** Constraints + Production rules: reactive constraint satisfaction
+
+Use production rules to propagate constraint changes. When a variable is bound, fire rules that further constrain related variables.
+
+*** Search + Production rules: heuristic problem solving
+
+Use A* to guide production rule firing. Instead of naive conflict resolution, estimate utility of firing each rule and pursue most promising first.
+
+*** amb + Constraints: backtracking constraint satisfaction
+
+Use amb to explore the space of variable assignments, with constraint checks as acceptance tests. amb handles backtracking, constraints prune search space.
+
+** Post ideas
+
+*** The Unreasonable Effectiveness of EAV
+
+Why entity-attribute-value representation is so versatile. Compare to other knowledge representations (frames, objects, graphs, tables).
+
+*** Nondeterministic Programming in Clojure
+
+McCarthy's amb operator and its implementation. Express search problems declaratively. Compare to Prolog, core.logic, and explicit backtracking.
+
