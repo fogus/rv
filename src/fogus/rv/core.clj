@@ -13,14 +13,14 @@
   Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys.
 
   {:kb/id       :person/john-doe
-   :person/name "John Doe"
+   :person/name \"John Doe\"
    :person/age  42}
   
   Table: a set of hashmaps or Entities. Tables represent unstructured or
   semi-structured collections of data.
 
-  #{{:kb/id :city/blt :city/name "Baltimore"}
-    {:kb/id :city/atl  :city/name "Atlanta"}}
+  #{{:kb/id :city/blt :city/name \"Baltimore\"}
+    {:kb/id :city/atl  :city/name \"Atlanta\"}}
 
   Fact: a vector triple in the form [entity-id attribute value] that describe that
   a given entity has an attribute with a specific value. You can tie facts together
@@ -59,8 +59,7 @@
   Constraint Description: a set of LVars and a Formula describing the domain
   of their values.
 
-  Formula: a list describing a predicate expression of mixed LVars and clojure functions."
-  (:import java.io.Writer))
+  Formula: a list describing a predicate expression of mixed LVars and clojure functions.")
 
 ;; Logic variables
 
@@ -88,13 +87,13 @@
   (toString [_] "?")
   (equals [_ o] true))
 
-(defmethod print-method LVar [lvar ^Writer writer]
+(defmethod print-method LVar [lvar ^java.io.Writer writer]
   (.write writer (str lvar)))
 
-(defmethod print-method IgnoreT [i ^Writer writer]
+(defmethod print-method IgnoreT [i ^java.io.Writer writer]
   (.write writer (str i)))
 
-(defmethod print-method AnyT [a ^Writer writer]
+(defmethod print-method AnyT [a ^java.io.Writer writer]
   (.write writer (str a)))
 
 (def ID_KEY :kb/id)

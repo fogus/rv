@@ -42,6 +42,17 @@
                   [?pid :emergency/type ?problem]]
                 fkb)))))
 
+(deftest test-datalog-q*-no-rules
+  (let [fkb #{[-1002 :response/to -51]
+              [-51 :emergency/type :emergency.type/flood]
+              [-50 :emergency/type :emergency.type/fire]
+              [-1002 :response/type :response.type/kill-electricity]
+              [-1000 :response/to -50]
+              [-1000 :response/type :response.type/activate-sprinklers]}]
+
+    (is (= {:kb/id -1000, :response/to -50, :response/type :response.type/activate-sprinklers}
+           (d/entity fkb -1000)))))
+
 (deftest test-datalog-ops
   (let [nkb #{[0 :a/num 0]
               [1 :a/num 1]

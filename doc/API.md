@@ -104,18 +104,56 @@ Accepts a map describing a constraint description containing the mappings:
 Most functions in rv work off of one or more of the following core
   concepts:
 
-  - Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys
-  - Table: a set of hashmaps or Entities
-  - Fact: a vector triple in the form [entity-id attribute value]
-  - Relation: a set of Facts pertaining to a particular Entity
-  - LVar: a logic variable that can bind to any value in its :range
-  - Ground: a concrete value
-  - Query: a set of Facts containing a mix of LVars and Grounds  
-  - Rules: a set of Facts describing synthetic relations
-  - Production: a pair of: antecedent query and consequent Facts
-  - KB: a set of Relations about many Entities and possibly containing Productions  
-  - Constraint Description: a set of LVars and a Formula describing the domain of their values
-  - Formula: a list describing a predicate expression of mixed LVars and clojure functions
+  Entity: a hashmap with a :kb/id key mapped to a unique value and namespaced keys.
+
+  {:kb/id       :person/john-doe
+   :person/name "John Doe"
+   :person/age  42}
+  
+  Table: a set of hashmaps or Entities. Tables represent unstructured or
+  semi-structured collections of data.
+
+  #{{:kb/id :city/blt :city/name "Baltimore"}
+    {:kb/id :city/atl  :city/name "Atlanta"}}
+
+  Fact: a vector triple in the form [entity-id attribute value] that describe that
+  a given entity has an attribute with a specific value. You can tie facts together
+  by referencing their :kb/ids.
+
+  [:person/john-doe :person/age 42]
+  [:city/blt :city/name "Baltimore"]
+
+  Relation: a set of Facts pertaining to a particular Entity. You can tie facts
+  together by referencing :kb/ids in value positions.
+
+  #{[:person/john-doe :person/age 42]
+    [:city/blt :city/name "Baltimore"]
+    [:person/john-doe :address/city :city/blt]}
+
+  LVar: a logic variable that can unify with any value in its :range
+
+  (map->LVar {:domain 'x :range (range 0 5)})
+
+  Ground: a concrete value, like a keyword, number, string, etc.
+
+  42, "John Doe", :city/blt
+
+  Query: a set of Facts containing a mix of LVars and Grounds used  to find
+  bindings for the LVars that satisfy a set of Facts.
+
+  Rules: a set of Facts describing derived or synthetic relations in terms of
+  existing ones.
+
+  Production: a map containing :antecedent -> query and :consequent -> Facts
+  to be asserted if the query fires.
+
+  KB: a set of Relations about many Entities and possibly containing Productions. It
+  represents all the knowledge currently known or derivable.
+
+  Constraint Description: a set of LVars and a Formula describing the domain
+  of their values.
+
+  Formula: a list describing a predicate expression of mixed LVars and clojure functions.
 
 
 
@@ -125,52 +163,52 @@ Most functions in rv work off of one or more of the following core
 
 (->AnyT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L80-L83">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->AskT">`->AskT`</a><a name="fogus.rv.core/->AskT"></a>
 ``` clojure
 
 (->AskT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L85-L88">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->IgnoreT">`->IgnoreT`</a><a name="fogus.rv.core/->IgnoreT"></a>
 ``` clojure
 
 (->IgnoreT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L78">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AnyT">`AnyT`</a><a name="fogus.rv.core/AnyT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L43-L46">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L80-L83">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AskT">`AskT`</a><a name="fogus.rv.core/AskT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L48-L51">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L85-L88">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/ID_KEY">`ID_KEY`</a><a name="fogus.rv.core/ID_KEY"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L62-L62">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L99-L99">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/IgnoreT">`IgnoreT`</a><a name="fogus.rv.core/IgnoreT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L38-L41">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L78">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/lv?">`lv?`</a><a name="fogus.rv.core/lv?"></a>
 ``` clojure
 
 (lv? %1)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L36-L36">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L73-L73">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/map->relation">`map->relation`</a><a name="fogus.rv.core/map->relation"></a>
 ``` clojure
@@ -189,7 +227,7 @@ Converts a map to a set of tuples for that map, applying a unique
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L118-L140">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L155-L177">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/table->kb">`table->kb`</a><a name="fogus.rv.core/table->kb"></a>
 ``` clojure
@@ -207,7 +245,7 @@ Converts a Table into a KB, applying unique :kb/id to maps without a
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L142-L154">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L179-L191">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.datalog">fogus.rv.datalog</a>
@@ -217,6 +255,16 @@ A minimal implementation of Datalog.
 
 
 
+
+## <a name="fogus.rv.datalog/entity">`entity`</a><a name="fogus.rv.datalog/entity"></a>
+``` clojure
+
+(entity kb id)
+```
+
+Given a KB and an id within that KB, returns a map containing all of
+  the attr->val mappings for that logical 'entity'.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L151-L162">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/linked-list-rules">`linked-list-rules`</a><a name="fogus.rv.datalog/linked-list-rules"></a>
 

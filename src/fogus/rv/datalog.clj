@@ -148,6 +148,19 @@
          (list* find where)
          rules))))
 
+(defn entity
+  "Given a KB and an id within that KB, returns a map containing all of
+  the attr->val mappings for that logical 'entity'."
+  [kb id]
+  (let [eres (q [:find '?attr '?val
+                 :where
+                 [id '?attr '?val]]
+                kb)]
+    (when (seq eres)
+      (reduce (fn [e [attr val]] (assoc e attr val))
+              {:kb/id id}
+              eres))))
+
 (comment
   (def fkb
     {:facts

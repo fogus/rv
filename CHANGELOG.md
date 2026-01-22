@@ -1,3 +1,7 @@
+# v0.0.11
+- Added `fogus.rv.datalog/entity` to get an 'entity' map from a KB and id
+- Fixed fogus.rv.core ns docstring
+
 # v0.0.10
 - Added vector encoding for datalog tuples
 
