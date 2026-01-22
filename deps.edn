@@ -9,18 +9,11 @@
                   :extra-paths ["test"]}
 
            :build
-           {:deps {io.github.clojure/tools.build {:git/tag "v0.10.6" :git/sha "52cf7d6"}}
+           {:deps {io.github.clojure/tools.build {:mvn/version "0.10.10"}
+                   slipset/deps-deploy {:mvn/version "RELEASE"}}
             :ns-default build}
-
-           :deploy
-           {:extra-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-            :exec-fn deps-deploy.deps-deploy/deploy
-            :exec-args {:installer :remote
-                        :sign-releases? true
-                        :sign-key-id "CBBDC7BE00954E2E3A46C80CA3994949855D2816"
-                        :artifact "target/rv.jar"}}
            
-           :dev {:extra-deps {org.clojure/clojure {:mvn/version "1.12.0"}}}
+           :dev {:extra-deps {org.clojure/clojure {:mvn/version "1.12.4"}}}
   }
  }
 
