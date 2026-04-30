@@ -685,7 +685,7 @@ Common search-related functions and protocols.
 
 
 Functions related to graph-search algorithms.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L4-L11">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L4-L12">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/HeuristicSearch">`HeuristicSearch`</a><a name="fogus.rv.search/HeuristicSearch"></a>
 
@@ -693,7 +693,7 @@ Functions related to graph-search algorithms.
 
 
 Function(s) related to heuristic-guided search.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L13-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L14-L17">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/add-route">`add-route`</a><a name="fogus.rv.search/add-route"></a>
 ``` clojure
@@ -721,7 +721,16 @@ Returns the cost to visit `node`.
 ```
 
 Returns an estimated cost of the route from `node` to `goal`.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L15-L16">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L16-L17">Source</a></sub></p>
+
+## <a name="fogus.rv.search/goal?">`goal?`</a><a name="fogus.rv.search/goal?"></a>
+``` clojure
+
+(goal? _ node)
+```
+
+Returns true if `node` satisfies the goal condition.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/search.clj#L12-L12">Source</a></sub></p>
 
 ## <a name="fogus.rv.search/neighbors-of">`neighbors-of`</a><a name="fogus.rv.search/neighbors-of"></a>
 ``` clojure
