@@ -1,5 +1,6 @@
 # v0.0.12 (unreleased)
--
+- Added `goal?` function to `fogus.rv.search/GraphSearch` protocol.
+- 
 
 # v0.0.11
 - Added `fogus.rv.datalog/entity` to get an 'entity' map from a KB and id
