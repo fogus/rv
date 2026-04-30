@@ -37,7 +37,7 @@
             cheapest-nbr (util/f-by min-key :cost (keep #(search/route-of graph %) neighbors))
             newcost (path-cost (search/cost-of graph node) (:cost cheapest-nbr))
             oldcost (:cost (search/route-of graph node))]
-        (if (= node goal-node)
+        (if (search/goal? graph node)
           (recur (inc steps)
                  (search/add-route graph node
                                    {:cost newcost

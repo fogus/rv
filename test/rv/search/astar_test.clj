@@ -14,16 +14,18 @@
   (let [size (count yxcosts)]
     (vec (repeat size (vec (repeat size nil))))))
 
-(deftype SimpleAsciiGraph [dirs step-est yxcosts routes]
+(deftype SimpleAsciiGraph [dirs step-est yxcosts routes goal]
   search/GraphSearch
   (neighbors-of [_ yx]
     (neighbors dirs (count yxcosts) yx))
   (add-route [_ node new-path]
-    (SimpleAsciiGraph. dirs step-est yxcosts (assoc-in routes node new-path)))
+    (SimpleAsciiGraph. dirs step-est yxcosts (assoc-in routes node new-path) goal))
   (route-of [_ node]
     (get-in routes node))
   (cost-of [_ yx]
     (get-in yxcosts yx))
+  (goal? [_ node]
+    (= node goal))
   search/HeuristicSearch
   (estimate-cost [_ yx _]
     (let [[y x] yx
@@ -36,7 +38,7 @@
                  [  1   1   1   1   1]
                  [  1 999 999 999 999]
                  [  1   1   1   1   1]]
-        z-graph (SimpleAsciiGraph. ORTHO-DIRS 900 z-world (init-routes z-world))
+        z-graph (SimpleAsciiGraph. ORTHO-DIRS 900 z-world (init-routes z-world) [4 4])
         res (graph/astar z-graph [0 0] [4 4])]
     (is (= 17 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [2 3] [2 2] [2 1] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
@@ -47,7 +49,7 @@
                    [1 1 1 999 1]
                    [1 1 1 999 1]
                    [1 1 1 1   1]]
-        down-graph (SimpleAsciiGraph. ORTHO-DIRS 900 down-path (init-routes down-path))
+        down-graph (SimpleAsciiGraph. ORTHO-DIRS 900 down-path (init-routes down-path) [4 4])
         res (graph/astar down-graph [0 0] [4 4])]
     (is (= 9 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [1 2] [2 2] [3 2] [4 2] [4 3] [4 4]]
@@ -58,7 +60,7 @@
                  [1 1 1 999 1]
                  [1 1 1 999 1]
                  [1 1 1 3   1]]
-        up-graph (SimpleAsciiGraph. ORTHO-DIRS 900 up-path (init-routes up-path))
+        up-graph (SimpleAsciiGraph. ORTHO-DIRS 900 up-path (init-routes up-path) [4 4])
         res (graph/astar up-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [0 1] [0 2] [0 3] [0 4] [1 4] [2 4] [3 4] [4 4]]
@@ -69,7 +71,7 @@
                 [1 2 1 999 1]
                 [1 2 2 999 1]
                 [1 1 1 2   1]]
-        l-graph (SimpleAsciiGraph. ORTHO-DIRS 900 l-path (init-routes l-path))
+        l-graph (SimpleAsciiGraph. ORTHO-DIRS 900 l-path (init-routes l-path) [4 4])
         res (graph/astar l-graph [0 0] [4 4])]
     (is (= 10 (:cost res)))
     (is (= [[0 0] [1 0] [2 0] [3 0] [4 0] [4 1] [4 2] [4 3] [4 4]]
@@ -80,7 +82,7 @@
                     [1 1 1 999 1]
                     [1 1 1 999 1]
                     [1 1 1 1   1]]
-        short-graph (SimpleAsciiGraph. ORTHO-DIRS 900 short-path (init-routes short-path))
+        short-graph (SimpleAsciiGraph. ORTHO-DIRS 900 short-path (init-routes short-path) [1 1])
         res (graph/astar short-graph [0 0] [1 1])]
     (is (= 2 (:cost res)))
     (is (= [[0 0] [1 0] [1 1]]

@@ -8,7 +8,8 @@
   (add-route [_ node new-route]
     "Adds a route to a `node` as a seq of nodes. Implementors of this function
     should return an instance of the object implementing this protocol.")
-  (route-of [_ node] "Given a `node`, returns the route associated with it."))
+  (route-of [_ node] "Given a `node`, returns the route associated with it.")
+  (goal? [_ node] "Returns true if `node` satisfies the goal condition."))
 
 (defprotocol HeuristicSearch
   "Function(s) related to heuristic-guided search."
