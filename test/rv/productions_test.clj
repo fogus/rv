@@ -19,7 +19,6 @@
          :facts all-facts})
 
 (deftest test-unifications
-  ""
   (testing "that the context seq is built with a single antecedent pattern."
     (is (= '[{?id -50}]
            (p/unifications '[[?id :emergency/type :emergency.type/fire]]
@@ -72,7 +71,7 @@
                   results))))))
 
 (deftest test-cycle
-  (testing "that the whole cycle occurs as expected"
+  (testing "that the whole run occurs as expected"
     (let [naive-engine (p/make-engine :rule-choice naive/random-choice
                                       :state-xform naive/noop
                                       :quiesce     (naive/qf 256))
@@ -98,3 +97,37 @@
                     [?id :response/to     ?pid]
                     [?pid :emergency/type ?problem]]
                   emergency))))))
+
+;; A sliding-window transducer of size n.
+(defn slide [n]
+  (fn [rf]
+    (let [buf (volatile! [])]
+      (fn
+        ([] (rf))
+        ([acc] (rf acc))
+        ([acc x]
+         (let [b (vswap! buf #(vec (take-last n (conj % x))))]
+           (if (= n (count b))
+             (rf acc b)
+             acc)))))))
+
+(defn fixed-point-qf
+  ([] nil)
+  ([acc] acc)
+  ([_ [prev cur]] (if (= prev cur) (reduced cur) cur)))
+
+(deftest test-cycle-fixed-point
+  (testing "that run short-circuits once successive states stop changing"
+    (let [fixed-point-system (p/make-engine :rule-choice first 
+                                            :state-xform (slide 2)
+                                            :quiesce fixed-point-qf)
+          results (p/run fixed-point-system
+                    {:productions '[{:antecedent [[?id :person/name ?n]
+                                                  [?id :isa/human? true]]
+                                     :consequent [[?id :isa/mortal? true]]}]
+                     :facts       #{[42 :person/name "Socrates"]
+                                    [42 :isa/human? true]}})]
+      (is (= #{[42 :person/name "Socrates"]
+               [42 :isa/human? true]
+               [42 :isa/mortal? true]}
+             results)))))
