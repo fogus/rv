@@ -7,60 +7,92 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns fogus.rv.productions
-  "The simplest possible production rules system that uses a set
-   of EAV tuples as its knowledge base."
+  "The simplest possible production rules system. A run pairs two
+   abstractions: a knowledge base (facts + rules) with an engine (a
+   rule-selection strategy paired with a quiessence-detection strategy).
+
+   A production rules system is built from two abstractions:
+
+     1. A knowledge base is the rules and the facts they operate on (the WHAT)
+     2. An engine is the policy that applies the rule processing (the HOW)
+
+   Productions are represented as maps having two privileged keys:
+   {:antecedent ...
+    :consequent ...}
+
+   The :antecedent key in the production map contains a sequence of EAV
+   3-tuples with logical variables at key locations for the purpose of
+   pattern matching:
+
+     [[?id :person/name     \"Fogus\"]
+      [?id :language/speaks ?lang]]
+
+   The antecedent describes the patterns that must be present in the EAV
+   set in order for the production to activate. The antecedent is also
+   known as the left-hand-side (LHS) of the production.
+
+   When a production activates, the structure in the :consequent key in
+   the production map is applied to the knowledge base to potentially
+   create new facts. The consequent also contains a sequence of EAV
+   3-tuples with logical variables at key locations. However, these tuples
+   describe new facts with values bound to embedded logic variables as
+   defined within the antecedent context of a production activation.
+
+   A production set is a data structure defined as such:
+
+     1. A production set is simply a vector of production definitions
+     2. A production definition is a map containing :antecedent and :consequent keys
+     3. An antecedent is a vector of EAV 3-tuples representing patterns in data
+     4. An EAV 3-tuple is a vector of three elements: id, attribute, value
+     5. A consequent is a vector of EAV 3-tuples representing new attribute assertions
+
+   A fact base is a set of EAV 3-tuples.
+
+   A knowledge base is a map of productions and facts, mapped to keys:
+
+   {:productions #{...}
+    :facts       #{...}}
+
+   An engine describes how a knowledge base is processed: which
+   matching production fires next, how the stream of successive fact sets
+   is shaped, and how quiessence is detected:
+
+   :rule-choice -> fn to pick which production fires next
+   :state-xform -> transformer of fact-set states
+   :quiesce     -> a completing reducing function that detects when to stop
+
+   The production rules system implemented herein runs an engine against
+   a knowledge base in four stages:
+
+     1. Antecedent unifications over the KB's facts
+     2. Production selection via the engine's :rule-choice
+     3. Consequent substitution and assertion
+     4. System quiessence via the engine's :quiesce, through :state-xform
+"
   (:require [clojure.core.unify :as u]
-            [clojure.set :as s])
-  (:refer-clojure :exclude [cycle]))
+            [clojure.set :as s]))
 
-;; Productions are represented as maps having two privileged keys:
-;; {:antecedent ... 
-;;  :consequent ...}
+;; Stage 0: Engine definition
 
-;; The :antecedent key in the production map contains a sequence of EAV 3-tuples 
-;; with logical variables at key locations for the purpose of pattern matching.
-;; These patterns refer to facts in the knowledge base.
-;;
-;; [[?id :person/name     "Fogus"]
-;;  [?id :language/speaks ?lang]]
-;;
-;; The antecedent describes the patterns that must be present in the EAV
-;; set in order for the production to activate. The antecedent is also known as
-;; the left-hand-side (LHS) of the production.
+(defn make-engine
+  "Constructs a production rules engine from input functions:
 
-;; When a production activates, the structure in the :consequent key in the production
-;; map is applied to the knowledge base to potentially create new facts.
-;; The consequent also contains a sequence of EAV 3-tuples with logical 
-;; variables at key locations.  However, the tuples describe new facts 
-;; with values bound to embedded logic variables as defined within the 
-;; context of a production activation.
-
-;; A production set is just a data structure defines as such:
-;;
-;; 1. A production set is simply a vector of production definitions
-;; 2. A production definition is a map containing :antecedent and :consequent keys
-;; 3. An antecedent is a vector of EAV 3-tuples representing patterns in data
-;; 4. An EAV 3-tuple is a vector of three elements: id, attribute, value
-;; 5. A consequent is a vector of EAV 3-tuples representing new attribute assertions
-
-;; A fact base is a set of EAV 3-tuples.
-
-;; A knowledge base is a map with two keys in it
-;; {:productions <a production set> 
-;;  :facts <a fact base>}
-
-;; The production productions sytem implemented herein is a a four stage system:
-;;
-;; 1. Antecedent unifications
-;; 2. Production selection
-;; 3. Consequent substitutions and assertion
-;; 4. System quiessence
+   :rule-choice -> fn to pick which production fires next
+   :state-xform -> transformer of fact-set states
+   :quiesce     -> a completing reducing function that detects when to stop
+       () initial accumulator
+       (state) extract the final fact set
+       (state s) new state, or (reduced acc)
+  "
+  [& {:as config}]
+  {:pre [(every? #(contains? config %) #{:rule-choice :state-xform :quiesce})]}
+  config)
 
 ;; Stage 1: Unifications
 
 (defn unifications 
   "Walks through all of the clauses in an implied antecedent and matches 
-   each against every fact provided.  Returns a seq of contexts representing
+   each against every fact provided. Returns a seq of contexts representing
    all of the bindings established by the antecedent unifications across all
    facts provided."
   [[clause & more :as clauses] facts context]
@@ -81,7 +113,6 @@
           [production bindings])]
     (selection-strategy possibilities)))
 
-
 ;; Stage 3: Consequent substitutions and assertion
 
 (defn apply-production [production facts context]
@@ -100,25 +131,18 @@
 
 ;; Stage 3b: Repeated substitution and assertion
 
-(defn states 
-  "Will apply the result of one production firing to the fact base and feed 
-   the result forward into the next firing."
-  [kb] 
-  (iterate #(step (assoc kb :facts %))
+(defn states
+  "Will apply the result of one production firing to the fact base and feed
+   the result forward into the next firing. The production selection is
+   driven by choice-fn."
+  [choice-fn kb]
+  (iterate #(step choice-fn (assoc kb :facts %))
            (set (:facts kb))))
 
-(defn cycle 
-  "Feeds the results of states into a function qf that is responsible for 
-   detecting when production firings have stopped and returns an augmented
-   fact set."
-  [qf kb]
-  (qf (states kb)))
-
-;; Stage 4: System quiessence
-
-(defn naive-qf 
-  "Takes the last environment in a long sequence of states in the hope that 
-   the sequence was long enough that all of the productions fired in creating it."
-  [states]
-  (last (take 256 states)))
+(defn run
+  "Runs a production rules engine against a knowledge base, driving the
+   state stream through the engine's transducer and quiessence function
+   until quiessence is reached, then returning the final fact set."
+  [{:keys [rule-choice state-xform quiesce]} kb]
+  (transduce state-xform quiesce (states rule-choice kb)))
 

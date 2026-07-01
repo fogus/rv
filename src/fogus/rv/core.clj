@@ -56,6 +56,9 @@
   KB: a set of Relations about many Entities and possibly containing Productions. It
   represents all the knowledge currently known or derivable.
 
+  Engine: describes how a KB is processed, including: which matching Production fires
+  next, how the stream of successive Facts are shaped, and how to know when to stop.
+
   Constraint Description: a set of LVars and a Formula describing the domain
   of their values.
 

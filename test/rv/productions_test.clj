@@ -1,6 +1,7 @@
 (ns rv.productions-test
   (:require [clojure.test :refer :all]
             [fogus.rv.productions :as p]
+            [fogus.rv.productions.naive :as naive]
             [fogus.rv.datalog :as d]))
 
 (def productions
@@ -72,21 +73,23 @@
 
 (deftest test-cycle
   (testing "that the whole cycle occurs as expected"
-    (let [results (p/cycle p/naive-qf
-                           '{:productions [{:antecedent   [[?id :person/name ?n]
-                                                           [?id :isa/human? true]]
-                                            :consequent [[?id :isa/mortal? true]]}]
-                             :facts #{[42 :person/name "Socrates"]
-                                      [42 :isa/human? true]}})]
+    (let [naive-engine (p/make-engine :rule-choice naive/random-choice
+                                      :state-xform naive/noop
+                                      :quiesce     (naive/qf 256))
+          socrates  (p/run naive-engine
+                      '{:productions [{:antecedent [[?id :person/name ?n]
+                                                    [?id :isa/human? true]]
+                                       :consequent [[?id :isa/mortal? true]]}]
+                        :facts #{[42 :person/name "Socrates"]
+                                 [42 :isa/human? true]}})
+          emergency (p/run naive-engine KB)]
       (is (= #{[42 :isa/mortal? true] [42 :isa/human? true] [42 :person/name "Socrates"]}
-             results)))
-    (let [results (p/cycle p/naive-qf KB)]
+             socrates))
       (is (= #{[:response.type/kill-electricity] [:response.type/activate-sprinklers]}
              (d/q '[:find ?response
                     :where
                     [_ :response/type ?response]]
-                  results)))
-
+                  emergency)))
       (is (= #{[:emergency.type/fire   :response.type/activate-sprinklers]
                [:emergency.type/flood  :response.type/kill-electricity]}
              (d/q '[:find ?problem ?response
@@ -94,4 +97,4 @@
                     [?id :response/type   ?response]
                     [?id :response/to     ?pid]
                     [?pid :emergency/type ?problem]]
-                  results))))))
+                  emergency))))))

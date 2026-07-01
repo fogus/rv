@@ -150,6 +150,9 @@ Most functions in rv work off of one or more of the following core
   KB: a set of Relations about many Entities and possibly containing Productions. It
   represents all the knowledge currently known or derivable.
 
+  Engine: describes how a KB is processed, including: which matching Production fires
+  next, how the stream of successive Facts are shaped, and how to know when to stop.
+
   Constraint Description: a set of LVars and a Formula describing the domain
   of their values.
 
@@ -163,52 +166,52 @@ Most functions in rv work off of one or more of the following core
 
 (->AnyT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L80-L83">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L83-L86">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->AskT">`->AskT`</a><a name="fogus.rv.core/->AskT"></a>
 ``` clojure
 
 (->AskT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L85-L88">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L88-L91">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/->IgnoreT">`->IgnoreT`</a><a name="fogus.rv.core/->IgnoreT"></a>
 ``` clojure
 
 (->IgnoreT)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L78">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L78-L81">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AnyT">`AnyT`</a><a name="fogus.rv.core/AnyT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L80-L83">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L83-L86">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/AskT">`AskT`</a><a name="fogus.rv.core/AskT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L85-L88">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L88-L91">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/ID_KEY">`ID_KEY`</a><a name="fogus.rv.core/ID_KEY"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L99-L99">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L102-L102">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/IgnoreT">`IgnoreT`</a><a name="fogus.rv.core/IgnoreT"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L75-L78">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L78-L81">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/lv?">`lv?`</a><a name="fogus.rv.core/lv?"></a>
 ``` clojure
 
 (lv? %1)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L73-L73">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L76-L76">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/map->relation">`map->relation`</a><a name="fogus.rv.core/map->relation"></a>
 ``` clojure
@@ -227,7 +230,7 @@ Converts a map to a set of tuples for that map, applying a unique
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L155-L177">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L158-L180">Source</a></sub></p>
 
 ## <a name="fogus.rv.core/table->kb">`table->kb`</a><a name="fogus.rv.core/table->kb"></a>
 ``` clojure
@@ -245,7 +248,7 @@ Converts a Table into a KB, applying unique :kb/id to maps without a
   An idfn is a function of map -> id and if provided is used to
   override the default entity id generation and any existing :kb/id
   values.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L179-L191">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/core.clj#L182-L194">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.datalog">fogus.rv.datalog</a>
@@ -264,13 +267,13 @@ A minimal implementation of Datalog.
 
 Given a KB and an id within that KB, returns a map containing all of
   the attr->val mappings for that logical 'entity'.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L151-L162">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L153-L164">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/linked-list-rules">`linked-list-rules`</a><a name="fogus.rv.datalog/linked-list-rules"></a>
 
 
 
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L80-L81">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L82-L83">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/q">`q`</a><a name="fogus.rv.datalog/q"></a>
 ``` clojure
@@ -323,7 +326,7 @@ Queries a knowledge base or a set of relations given a vector
   `relationship/father`. Rules describe synthetic relations derived
   from real relations in the data or other synthetic relations
   derived from previous rule applications.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L94-L149">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L96-L151">Source</a></sub></p>
 
 ## <a name="fogus.rv.datalog/query->map">`query->map`</a><a name="fogus.rv.datalog/query->map"></a>
 ``` clojure
@@ -333,7 +336,7 @@ Queries a knowledge base or a set of relations given a vector
 
 Accepts the vector form of a Datalog query and outputs a map
   of the component sections as keyword->seq mappings.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L83-L92">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/datalog.clj#L85-L94">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.fuzzy.soundex">fogus.rv.fuzzy.soundex</a>
@@ -594,8 +597,68 @@ Given a version space `vs` and an `example`, returns a new version space
 # <a name="fogus.rv.productions">fogus.rv.productions</a>
 
 
-The simplest possible production rules system that uses a set
-   of EAV tuples as its knowledge base.
+The simplest possible production rules system. A run pairs two
+   abstractions: a knowledge base (facts + rules) with an engine (a
+   rule-selection strategy paired with a quiessence-detection strategy).
+
+   A production rules system is built from two abstractions:
+
+     1. A knowledge base is the rules and the facts they operate on (the WHAT)
+     2. An engine is the policy that applies the rule processing (the HOW)
+
+   Productions are represented as maps having two privileged keys:
+   {:antecedent ...
+    :consequent ...}
+
+   The :antecedent key in the production map contains a sequence of EAV
+   3-tuples with logical variables at key locations for the purpose of
+   pattern matching:
+
+     [[?id :person/name     "Fogus"]
+      [?id :language/speaks ?lang]]
+
+   The antecedent describes the patterns that must be present in the EAV
+   set in order for the production to activate. The antecedent is also
+   known as the left-hand-side (LHS) of the production.
+
+   When a production activates, the structure in the :consequent key in
+   the production map is applied to the knowledge base to potentially
+   create new facts. The consequent also contains a sequence of EAV
+   3-tuples with logical variables at key locations. However, these tuples
+   describe new facts with values bound to embedded logic variables as
+   defined within the antecedent context of a production activation.
+
+   A production set is a data structure defined as such:
+
+     1. A production set is simply a vector of production definitions
+     2. A production definition is a map containing :antecedent and :consequent keys
+     3. An antecedent is a vector of EAV 3-tuples representing patterns in data
+     4. An EAV 3-tuple is a vector of three elements: id, attribute, value
+     5. A consequent is a vector of EAV 3-tuples representing new attribute assertions
+
+   A fact base is a set of EAV 3-tuples.
+
+   A knowledge base is a map of productions and facts, mapped to keys:
+
+   {:productions #{...}
+    :facts       #{...}}
+
+   An engine describes how a knowledge base is processed: which
+   matching production fires next, how the stream of successive fact sets
+   is shaped, and how quiessence is detected:
+
+   :rule-choice -> fn to pick which production fires next
+   :state-xform -> transformer of fact-set states
+   :quiesce     -> a completing reducing function that detects when to stop
+
+   The production rules system implemented herein runs an engine against
+   a knowledge base in four stages:
+
+     1. Antecedent unifications over the KB's facts
+     2. Production selection via the engine's :rule-choice
+     3. Consequent substitution and assertion
+     4. System quiessence via the engine's :quiesce, through :state-xform
+
 
 
 
@@ -605,28 +668,35 @@ The simplest possible production rules system that uses a set
 
 (apply-production production facts context)
 ```
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L87-L90">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L118-L121">Source</a></sub></p>
 
-## <a name="fogus.rv.productions/cycle">`cycle`</a><a name="fogus.rv.productions/cycle"></a>
+## <a name="fogus.rv.productions/make-engine">`make-engine`</a><a name="fogus.rv.productions/make-engine"></a>
 ``` clojure
 
-(cycle qf kb)
+(make-engine & {:as config})
 ```
 
-Feeds the results of states into a function qf that is responsible for 
-   detecting when production firings have stopped and returns an augmented
-   fact set.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L110-L115">Source</a></sub></p>
+Constructs a production rules engine from input functions:
 
-## <a name="fogus.rv.productions/naive-qf">`naive-qf`</a><a name="fogus.rv.productions/naive-qf"></a>
+   :rule-choice -> fn to pick which production fires next
+   :state-xform -> transformer of fact-set states
+   :quiesce     -> a completing reducing function that detects when to stop
+       () initial accumulator
+       (state) extract the final fact set
+       (state s) new state, or (reduced acc)
+  
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L77-L89">Source</a></sub></p>
+
+## <a name="fogus.rv.productions/run">`run`</a><a name="fogus.rv.productions/run"></a>
 ``` clojure
 
-(naive-qf states)
+(run {:keys [rule-choice state-xform quiesce]} kb)
 ```
 
-Takes the last environment in a long sequence of states in the hope that 
-   the sequence was long enough that all of the productions fired in creating it.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L119-L123">Source</a></sub></p>
+Runs a production rules engine against a knowledge base, driving the
+   state stream through the engine's transducer and quiessence function
+   until quiessence is reached, then returning the final fact set.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L142-L147">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/select-production">`select-production`</a><a name="fogus.rv.productions/select-production"></a>
 ``` clojure
@@ -636,17 +706,18 @@ Takes the last environment in a long sequence of states in the hope that
 
 Builds a sequence of bindings paired with each production and then uses a selection 
    function to execute one of the productions that matched.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L74-L82">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L106-L114">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/states">`states`</a><a name="fogus.rv.productions/states"></a>
 ``` clojure
 
-(states kb)
+(states choice-fn kb)
 ```
 
-Will apply the result of one production firing to the fact base and feed 
-   the result forward into the next firing.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L103-L108">Source</a></sub></p>
+Will apply the result of one production firing to the fact base and feed
+   the result forward into the next firing. The production selection is
+   driven by choice-fn.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L134-L140">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/step">`step`</a><a name="fogus.rv.productions/step"></a>
 ``` clojure
@@ -656,7 +727,7 @@ Will apply the result of one production firing to the fact base and feed
 ```
 
 Takes a set of productions and facts and returns a new fact base based on the application of single production.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L94-L99">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L125-L130">Source</a></sub></p>
 
 ## <a name="fogus.rv.productions/unifications">`unifications`</a><a name="fogus.rv.productions/unifications"></a>
 ``` clojure
@@ -665,10 +736,39 @@ Takes a set of productions and facts and returns a new fact base based on the ap
 ```
 
 Walks through all of the clauses in an implied antecedent and matches 
-   each against every fact provided.  Returns a seq of contexts representing
+   each against every fact provided. Returns a seq of contexts representing
    all of the bindings established by the antecedent unifications across all
    facts provided.
-<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L61-L70">Source</a></sub></p>
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions.clj#L93-L102">Source</a></sub></p>
+
+-----
+# <a name="fogus.rv.productions.naive">fogus.rv.productions.naive</a>
+
+
+
+
+
+
+## <a name="fogus.rv.productions.naive/noop">`noop`</a><a name="fogus.rv.productions.naive/noop"></a>
+
+
+
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions/naive.clj#L13-L13">Source</a></sub></p>
+
+## <a name="fogus.rv.productions.naive/qf">`qf`</a><a name="fogus.rv.productions.naive/qf"></a>
+``` clojure
+
+(qf n)
+```
+
+Returns reducing function that terminates after n production firings.
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions/naive.clj#L15-L22">Source</a></sub></p>
+
+## <a name="fogus.rv.productions.naive/random-choice">`random-choice`</a><a name="fogus.rv.productions.naive/random-choice"></a>
+
+
+
+<p><sub><a href="https://github.com/fogus/rv/blob/main/src/fogus/rv/productions/naive.clj#L11-L11">Source</a></sub></p>
 
 -----
 # <a name="fogus.rv.search">fogus.rv.search</a>

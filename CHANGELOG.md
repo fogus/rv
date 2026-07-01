@@ -1,6 +1,12 @@
-# v0.0.12 (unreleased)
+# v0.0.13 (unreleased)
+-
+
+# v0.0.12
+- Updated org.clojure/core.unify dep to v0.7.3
 - Added `goal?` function to `fogus.rv.search/GraphSearch` protocol.
-- 
+- Restructured `fogus.rv.productions` around two abstractions: a knowledge base (facts + rules) and an engine created with `make-engine`
+  + Renamed `cycle` to `run`; runs an engine against a knowledge base via `transduce` over the state stream.
+  + Moved `naive-qf` logic into new namespace `fogus.rv.productions.naive`
 
 # v0.0.11
 - Added `fogus.rv.datalog/entity` to get an 'entity' map from a KB and id

@@ -11,6 +11,8 @@
 ;;
 ;;  While this implementation may diverge over time, the articles above are
 ;;  a master class in simplicity and emergent behavior.
+;;
+;;  TODO: Consider if a queue would be better here to avoid full iteration over kb.
 
 (defn- lookup-op [op]
   (case op
