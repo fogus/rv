@@ -1,7 +1,7 @@
-# v0.0.13 (unreleased)
+# v0.0.14 (unreleased)
 -
 
-# v0.0.12
+# v0.0.13 (skipped 0.0.12)
 - Updated org.clojure/core.unify dep to v0.7.3
 - Added `goal?` function to `fogus.rv.search/GraphSearch` protocol.
 - Restructured `fogus.rv.productions` around two abstractions: a knowledge base (facts + rules) and an engine created with `make-engine`
