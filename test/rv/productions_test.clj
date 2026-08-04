@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]
             [fogus.rv.productions :as p]
             [fogus.rv.productions.naive :as naive]
-            [fogus.rv.datalog :as d]))
+            [fogus.rv.datalog :as d]
+            [fogus.xf :as xf]))
 
 (def productions
   '[{:antecedent   [[?id   :emergency/type :emergency.type/fire]]
@@ -98,19 +99,6 @@
                     [?pid :emergency/type ?problem]]
                   emergency))))))
 
-;; A sliding-window transducer of size n.
-(defn slide [n]
-  (fn [rf]
-    (let [buf (volatile! [])]
-      (fn
-        ([] (rf))
-        ([acc] (rf acc))
-        ([acc x]
-         (let [b (vswap! buf #(vec (take-last n (conj % x))))]
-           (if (= n (count b))
-             (rf acc b)
-             acc)))))))
-
 (defn fixed-point-qf
   ([] nil)
   ([acc] acc)
@@ -119,7 +107,7 @@
 (deftest test-cycle-fixed-point
   (testing "that run short-circuits once successive states stop changing"
     (let [fixed-point-system (p/make-engine :rule-choice first 
-                                            :state-xform (slide 2)
+                                            :state-xform (xf/slide 2)
                                             :quiesce fixed-point-qf)
           results (p/run fixed-point-system
                     {:productions '[{:antecedent [[?id :person/name ?n]
